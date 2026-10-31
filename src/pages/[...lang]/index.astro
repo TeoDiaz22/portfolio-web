@@ -1,9 +1,9 @@
 ---
 import { render } from "astro:content";
-import type { Locale } from "@constants/site.ts";
+import type { Locale } from "@constants/site.constants.ts";
 import Layout from "@layouts/Layout.astro";
-import { getPage } from "@utils/content.ts";
-import { localeStaticPaths } from "@utils/i18n.ts";
+import { getPage } from "@utils/content.utils.ts";
+import { localeStaticPaths } from "@utils/i18n.utils.ts";
 
 export const getStaticPaths = localeStaticPaths;
 

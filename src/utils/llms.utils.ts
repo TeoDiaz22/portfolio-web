@@ -2,7 +2,7 @@
  * Markdown views of the site for LLMs, following https://llmstxt.org: `/llms.txt` (index), `/llms-full.txt` (every
  * page inline) and a `.md` version of each page.
  */
-import type { PageEntry } from "@utils/content.ts";
+import type { PageEntry } from "@utils/content.utils.ts";
 
 /** Clean Markdown of a page: its title as H1, the description as a blockquote and the page body. */
 export function pageMarkdown(entry: PageEntry): string {

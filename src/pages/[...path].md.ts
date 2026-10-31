@@ -1,7 +1,7 @@
 import type { APIRoute, GetStaticPaths } from "astro";
-import { getIndexablePages, pagePath, type PageEntry } from "@utils/content.ts";
-import { markdownResponse, pageMarkdown } from "@utils/llms.ts";
-import { markdownPath } from "@utils/url.ts";
+import { getIndexablePages, pagePath, type PageEntry } from "@utils/content.utils.ts";
+import { markdownResponse, pageMarkdown } from "@utils/llms.utils.ts";
+import { markdownPath } from "@utils/url.utils.ts";
 
 /** Markdown version of every indexable page: `/about` → `/about.md`, `/` → `/index.html.md`. */
 export const getStaticPaths = (async () => {

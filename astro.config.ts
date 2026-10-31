@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { parseEnv } from "node:util";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField } from "astro/config";
-import { DEFAULT_LOCALE, LOCALES } from "./src/constants/site.ts";
+import { DEFAULT_LOCALE, LOCALES } from "./src/constants/site.constants.ts";
 
 /**
  * Astro loads `.env.[mode]` only after reading this file, so `site` cannot come from `astro:env`.

@@ -1,6 +1,6 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { INDEXNOW_KEY } from "astro:env/server";
-import { isIndexable } from "@utils/env.ts";
+import { isIndexable } from "@utils/env.utils.ts";
 
 /** IndexNow ownership file (`/<key>.txt` containing the key); only in production builds with a key. */
 export const getStaticPaths = (() =>

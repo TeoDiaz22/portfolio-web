@@ -1,8 +1,8 @@
 ---
 import { render } from "astro:content";
-import { DEFAULT_LOCALE } from "@constants/site.ts";
+import { DEFAULT_LOCALE } from "@constants/site.constants.ts";
 import Layout from "@layouts/Layout.astro";
-import { getPage } from "@utils/content.ts";
+import { getPage } from "@utils/content.utils.ts";
 
 // Hosts serve a single 404.html for every locale, so it is written in the default one
 const page = await getPage("404", DEFAULT_LOCALE);

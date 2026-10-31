@@ -5,7 +5,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import satori from "satori";
 import sharp from "sharp";
-import { SITE } from "@constants/site.ts";
+import { SITE } from "@constants/site.constants.ts";
 
 export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;

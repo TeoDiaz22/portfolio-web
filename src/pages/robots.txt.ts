@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
-import { BLOCKED_CRAWLERS } from "@constants/site.ts";
-import { isIndexable } from "@utils/env.ts";
-import { absoluteUrl } from "@utils/url.ts";
+import { BLOCKED_CRAWLERS } from "@constants/site.constants.ts";
+import { isIndexable } from "@utils/env.utils.ts";
+import { absoluteUrl } from "@utils/url.utils.ts";
 
 /** Production allows everything but `BLOCKED_CRAWLERS` and links the sitemap; staging blocks every crawler. */
 export const GET: APIRoute = ({ site }) => {

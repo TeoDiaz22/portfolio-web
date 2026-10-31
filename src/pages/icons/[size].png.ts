@@ -1,5 +1,5 @@
 import type { APIRoute, GetStaticPaths } from "astro";
-import { ICON_SIZES, pngResponse, renderIcon } from "@utils/icons.ts";
+import { ICON_SIZES, pngResponse, renderIcon } from "@utils/icons.utils.ts";
 
 export const getStaticPaths = (() =>
     ICON_SIZES.map((size) => ({ params: { size: String(size) } }))) satisfies GetStaticPaths;

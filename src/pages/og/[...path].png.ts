@@ -1,8 +1,8 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
-import { pagePath, splitPageId, type PageEntry } from "@utils/content.ts";
-import { renderOgImage } from "@utils/og-image.ts";
-import { absoluteUrl, ogImagePath } from "@utils/url.ts";
+import { pagePath, splitPageId, type PageEntry } from "@utils/content.utils.ts";
+import { renderOgImage } from "@utils/og-image.utils.ts";
+import { absoluteUrl, ogImagePath } from "@utils/url.utils.ts";
 
 /** Default Open Graph image of every page (`seo.image` overrides it): `/about` → `/og/about.png`. */
 export const getStaticPaths = (async () => {

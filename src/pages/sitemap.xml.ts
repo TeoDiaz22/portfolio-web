@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_LOCALE } from "@constants/site.ts";
-import { getIndexablePages, pagePath } from "@utils/content.ts";
-import { absoluteUrl } from "@utils/url.ts";
+import { DEFAULT_LOCALE } from "@constants/site.constants.ts";
+import { getIndexablePages, pagePath } from "@utils/content.utils.ts";
+import { absoluteUrl } from "@utils/url.utils.ts";
 
 const escapeXml = (value: string) =>
     value.replace(/[<>&'"]/g, (char) => `&${{ "<": "lt", ">": "gt", "&": "amp", "'": "apos", '"': "quot" }[char]};`);

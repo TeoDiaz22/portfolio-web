@@ -28,6 +28,9 @@ There is no test runner configured.
 - **Path aliases** (`@components`, `@layouts`, `@assets`, `@utils`, `@styles`, `@constants`) are defined in
   `tsconfig.json` and duplicated in the `importOrder` regex of `prettier.config.ts`; keep both in sync when adding one.
   Import local TS files with their extension (`allowImportingTsExtensions`).
+- **File naming**: plain TypeScript modules carry their role as a suffix: `src/utils/<name>.utils.ts`,
+  `src/constants/<name>.constants.ts` (e.g. `content.utils.ts`, `site.constants.ts`). Files whose name a tool requires
+  (`content.config.ts`, `*.config.ts`, endpoints in `src/pages/`) keep it.
 - `verbatimModuleSyntax` is on: type-only imports must use `import type`.
 - Prettier sorts imports, but side-effect imports (`import "@styles/global.css"`) intentionally keep their position so
   the CSS cascade order is not altered. It also sorts Tailwind classes (`tailwindStylesheet: ./src/styles/global.css`).

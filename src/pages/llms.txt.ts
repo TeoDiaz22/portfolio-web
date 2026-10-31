@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_LOCALE, LOCALE_META, LOCALES, SITE } from "@constants/site.ts";
-import { getIndexablePages, getPage, pagePath } from "@utils/content.ts";
-import { markdownResponse } from "@utils/llms.ts";
-import { absoluteUrl, markdownPath } from "@utils/url.ts";
+import { DEFAULT_LOCALE, LOCALE_META, LOCALES, SITE } from "@constants/site.constants.ts";
+import { getIndexablePages, getPage, pagePath } from "@utils/content.utils.ts";
+import { markdownResponse } from "@utils/llms.utils.ts";
+import { absoluteUrl, markdownPath } from "@utils/url.utils.ts";
 
 /** Section heading per locale; the default locale goes first since it is the site's main language. */
 const SECTION_TITLE: Record<(typeof LOCALES)[number], string> = {

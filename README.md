@@ -62,7 +62,7 @@ order as Vite.
 
 Every page gets its SEO from the `pages` content collection, and `src/components/seo/Seo.astro` (rendered by
 `Layout.astro`) turns it into title, description, canonical, robots, `hreflang`, Open Graph, Twitter Card and JSON-LD.
-Site-wide values (name, author, social profiles, theme color, blocked AI crawlers) live in `src/constants/site.ts`.
+Site-wide values (name, author, social profiles, theme color, blocked AI crawlers) live in `src/constants/site.constants.ts`.
 
 ### Adding a page
 

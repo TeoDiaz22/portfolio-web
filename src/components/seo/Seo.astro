@@ -6,11 +6,11 @@
 import { getImage } from "astro:assets";
 import { BING_SITE_VERIFICATION, GOOGLE_SITE_VERIFICATION } from "astro:env/server";
 import type { Thing } from "schema-dts";
-import { DEFAULT_LOCALE, LOCALE_META, LOCALES, SITE, type Locale } from "@constants/site.ts";
-import { isIndexable } from "@utils/env.ts";
-import { getAlternatePaths } from "@utils/i18n.ts";
-import { pageGraph, serializeJsonLd } from "@utils/schema.ts";
-import { absoluteUrl, markdownPath, ogImagePath, toPublicPath } from "@utils/url.ts";
+import { DEFAULT_LOCALE, LOCALE_META, LOCALES, SITE, type Locale } from "@constants/site.constants.ts";
+import { isIndexable } from "@utils/env.utils.ts";
+import { getAlternatePaths } from "@utils/i18n.utils.ts";
+import { pageGraph, serializeJsonLd } from "@utils/schema.utils.ts";
+import { absoluteUrl, markdownPath, ogImagePath, toPublicPath } from "@utils/url.utils.ts";
 import type { SeoData } from "../../content.config.ts";
 
 export interface Props {

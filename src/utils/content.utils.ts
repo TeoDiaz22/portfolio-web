@@ -1,6 +1,6 @@
 import { getCollection, getEntry, type CollectionEntry } from "astro:content";
-import { LOCALES, type Locale } from "@constants/site.ts";
-import { localizePath } from "@utils/i18n.ts";
+import { LOCALES, type Locale } from "@constants/site.constants.ts";
+import { localizePath } from "@utils/i18n.utils.ts";
 
 export type PageEntry = CollectionEntry<"pages">;
 

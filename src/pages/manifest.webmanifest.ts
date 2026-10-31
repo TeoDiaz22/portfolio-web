@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_LOCALE, LOCALE_META, SITE } from "@constants/site.ts";
-import { getPage } from "@utils/content.ts";
-import { ICON_SIZES } from "@utils/icons.ts";
+import { DEFAULT_LOCALE, LOCALE_META, SITE } from "@constants/site.constants.ts";
+import { getPage } from "@utils/content.utils.ts";
+import { ICON_SIZES } from "@utils/icons.utils.ts";
 
 export const GET: APIRoute = async () => {
     const home = await getPage("home", DEFAULT_LOCALE);

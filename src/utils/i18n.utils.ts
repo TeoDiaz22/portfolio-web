@@ -1,5 +1,5 @@
-import { DEFAULT_LOCALE, LOCALES, type Locale } from "@constants/site.ts";
-import { toPublicPath } from "@utils/url.ts";
+import { DEFAULT_LOCALE, LOCALES, type Locale } from "@constants/site.constants.ts";
+import { toPublicPath } from "@utils/url.utils.ts";
 
 export function isLocale(value: string | undefined): value is Locale {
     return LOCALES.includes(value as Locale);

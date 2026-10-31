@@ -3,7 +3,7 @@
  * (Person, WebSite) are described once and linked from each page.
  */
 import type { BreadcrumbList, Graph, Person, Thing, WebPage, WebSite } from "schema-dts";
-import { AUTHOR, LOCALE_META, SITE, type Locale } from "@constants/site.ts";
+import { AUTHOR, LOCALE_META, SITE, type Locale } from "@constants/site.constants.ts";
 import type { SeoData } from "../content.config.ts";
 
 export type PageType = SeoData["pageType"];
