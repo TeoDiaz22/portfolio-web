@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { DEFAULT_LOCALE, LOCALE_META, SITE } from "@constants/site.constants.ts";
+import { THEME_COLORS } from "@constants/theme.constants.ts";
 import { getPage } from "@utils/content.utils.ts";
 import { ICON_SIZES } from "@utils/icons.utils.ts";
 
@@ -12,8 +13,8 @@ export const GET: APIRoute = async () => {
         lang: LOCALE_META[DEFAULT_LOCALE].lang,
         start_url: "/",
         display: "browser",
-        theme_color: SITE.themeColor,
-        background_color: SITE.themeColor,
+        theme_color: THEME_COLORS.light.canvas,
+        background_color: THEME_COLORS.light.canvas,
         icons: ICON_SIZES.map((size) => ({ src: `/icons/${size}.png`, sizes: `${size}x${size}`, type: "image/png" })),
     };
     return new Response(JSON.stringify(manifest), { headers: { "Content-Type": "application/manifest+json" } });

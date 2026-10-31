@@ -1,8 +1,11 @@
 ---
 import "@styles/global.css";
+import { Font } from "astro:assets";
 import LanguageSwitcher from "@components/LanguageSwitcher.astro";
 import Seo, { type Props as SeoProps } from "@components/seo/Seo.astro";
-import { AUTHOR, LOCALE_META, SITE } from "@constants/site.constants.ts";
+import ThemeToggle from "@components/ThemeToggle.astro";
+import { AUTHOR, LOCALE_META } from "@constants/site.constants.ts";
+import { THEME_COLORS } from "@constants/theme.constants.ts";
 
 type Props = SeoProps;
 
@@ -14,8 +17,26 @@ const { locale, alternates } = Astro.props;
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script is:inline>
+            // Before the first paint, to avoid a flash of the wrong theme: the stored choice, else the system preference
+            (() => {
+                let theme;
+                try {
+                    theme = localStorage.getItem("theme");
+                } catch {
+                    // Storage can be blocked; fall back to the system preference
+                }
+                if (theme !== "light" && theme !== "dark") {
+                    theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+                }
+                document.documentElement.dataset.theme = theme;
+            })();
+        </script>
+        <Font cssVariable="--font-archivo" preload={[{ style: "normal", subset: "latin" }]} />
+        <Font cssVariable="--font-jetbrains-mono" />
         <Seo {...Astro.props} />
-        <meta name="theme-color" content={SITE.themeColor} />
+        <meta name="theme-color" content={THEME_COLORS.light.canvas} media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content={THEME_COLORS.dark.canvas} media="(prefers-color-scheme: dark)" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -24,7 +45,8 @@ const { locale, alternates } = Astro.props;
         <meta name="generator" content={Astro.generator} />
     </head>
     <body>
-        <header>
+        <header class="cd-container flex flex-wrap justify-end gap-2 pt-6">
+            <ThemeToggle locale={locale} />
             <LanguageSwitcher locale={locale} alternates={alternates} />
         </header>
         <slot />

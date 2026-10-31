@@ -1,0 +1,210 @@
+/*
+ * Tailwind theme built from the "Mateo Díaz Portfolio Design System" tokens (tokens.json).
+ * Tailwind's default scales are reset where the system defines its own, so only the system's values exist:
+ * `bg-surface-sunken`, `text-ink-muted`, `rounded-xl`, `shadow-lifted`, `text-h2`, `font-display`...
+ *
+ * Themes switch on `data-theme="light" | "dark"` on <html>; light is the default. Color utilities read the
+ * variables below, so `[data-theme="dark"]` only redefines their values and no `dark:` variant is needed for them.
+ */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+    /* Colors (light theme; dark values below). */
+    --color-*: initial;
+    --color-canvas: #faf9f5; /* Page background behind the bento grid */
+    --color-surface: #ffffff; /* Raised inner surface: cards, chips */
+    --color-surface-sunken: #f5f4ef; /* Tile background, nav indicator, active segmented option */
+    --color-surface-glass: rgba(255, 255, 255, 0.8); /* Nav and segmented pills, always with backdrop-blur-glass */
+    --color-surface-veil: rgba(255, 255, 255, 0.5); /* Tile action over a tile or photograph */
+    --color-ink: #141413; /* Headings, emphasis, body copy, current nav item */
+    --color-ink-secondary: #3d3d3a; /* Default interface text */
+    --color-ink-muted: #6f6e68; /* Subheads, ledes, labels; lowest ink that passes AA at 14px */
+    --color-ink-ghost: #97968e; /* Dimmed headline half, captions, hints. Fails AA below 24px */
+    --color-ink-whisper: rgba(20, 20, 19, 0.2); /* Ghost display text behind a mockup. Decoration only */
+    --color-ink-inverse: #ffffff; /* Text on an ink fill */
+    --color-accent: #2f5d4a; /* Bosque green: status dot and focus ring, at most twice per page */
+    --color-on-accent: #ffffff; /* Text on an accent fill */
+    --color-accent-soft: #dde8e1; /* Text selection background */
+    --color-signal: #b54539; /* Footnote asterisk and footnote text only */
+    --color-line-hairline: rgba(20, 20, 19, 0.06); /* Rule inside tiles, between timeline entries */
+    --color-line-subtle: rgba(20, 20, 19, 0.09); /* Case-study section rule, quiet chip outline */
+    --color-line-strong: rgba(20, 20, 19, 0.12); /* Nav edge, outline button, link underline at rest */
+    --color-line-ring: #dedee0; /* The 4px ring of the tile action */
+
+    /* Font families: sans, display and mono, defined in the inline block below. */
+    --font-*: initial;
+
+    /* Weight never exceeds 500: hierarchy is size and color. */
+    --font-weight-*: initial;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+
+    /*
+     * Type scale: `text-<style>` sets size, leading, tracking and weight. Interface 12-40px, display 80-190px.
+     * Display sizes are fluid, as in the system's Display component; pair them with `font-display`.
+     */
+    --text-*: initial;
+    --text-display-xl: clamp(4.5rem, 13vw, 11.875rem);
+    --text-display-xl--line-height: 1;
+    --text-display-xl--letter-spacing: -0.02em;
+    --text-display-xl--font-weight: 500;
+    --text-display-lg: clamp(3.5rem, 9vw, 7.5rem);
+    --text-display-lg--line-height: 1;
+    --text-display-lg--letter-spacing: -0.02em;
+    --text-display-lg--font-weight: 500;
+    --text-display-md: clamp(2.5rem, 7vw, 5rem);
+    --text-display-md--line-height: 1;
+    --text-display-md--letter-spacing: -0.015em;
+    --text-display-md--font-weight: 500;
+    --text-display-sm: clamp(1.75rem, 4vw, 2.5rem);
+    --text-display-sm--line-height: 1;
+    --text-display-sm--letter-spacing: 0.01em;
+    --text-display-sm--font-weight: 500;
+    --text-h1: 2.5rem;
+    --text-h1--line-height: 1;
+    --text-h1--letter-spacing: -0.02em;
+    --text-h1--font-weight: 500;
+    --text-h2: 2rem;
+    --text-h2--line-height: 1;
+    --text-h2--letter-spacing: -0.025em;
+    --text-h2--font-weight: 500;
+    --text-h3: 1.9375rem;
+    --text-h3--line-height: 1.25;
+    --text-h3--letter-spacing: -0.013em;
+    --text-h3--font-weight: 500;
+    --text-h4: 1.75rem;
+    --text-h4--line-height: 1.8;
+    --text-h4--font-weight: 500;
+    --text-subhead: 1.25rem;
+    --text-subhead--line-height: 1;
+    --text-subhead--font-weight: 400;
+    --text-lede: 1.25rem;
+    --text-lede--line-height: 1.5;
+    --text-lede--font-weight: 400;
+    --text-body-lg: 1.125rem;
+    --text-body-lg--line-height: 1.8;
+    --text-body-lg--font-weight: 400;
+    --text-body: 1rem; /* 16/32, the signature leading */
+    --text-body--line-height: 2;
+    --text-body--font-weight: 400;
+    --text-body-tight: 1rem;
+    --text-body-tight--line-height: 1.8;
+    --text-body-tight--font-weight: 400;
+    --text-action: 1rem;
+    --text-action--line-height: 1.375;
+    --text-action--font-weight: 500;
+    --text-ui: 0.875rem;
+    --text-ui--line-height: 1.43;
+    --text-ui--font-weight: 400;
+    --text-caption: 0.875rem;
+    --text-caption--line-height: 1;
+    --text-caption--letter-spacing: 0.1px;
+    --text-caption--font-weight: 400;
+    --text-label: 0.75rem; /* Uppercase eyebrow: pair with `uppercase` */
+    --text-label--line-height: 1;
+    --text-label--letter-spacing: 0.04em;
+    --text-label--font-weight: 500;
+    --text-mono: 0.875rem; /* Pair with `font-mono` */
+    --text-mono--line-height: 1.43;
+    --text-mono--font-weight: 400;
+
+    /*
+     * Spacing: the system's steps are multiples of 4px (space-1 = 4px ... space-30 = 120px), so Tailwind's
+     * 0.25rem unit maps them 1:1 (`p-8` = 32px). space-38 is the one step off that unit.
+     */
+    --spacing: 0.25rem;
+    --spacing-38: 150px; /* Space above a case-study section */
+    --spacing-gutter: 16px; /* Container side padding and bento gap: the one gap */
+    --spacing-cell: 328px; /* Bento column width and base row height */
+    --spacing-meta: 184px; /* Case-study metadata sidebar, timeline date column */
+
+    /* Max widths: `max-w-page`, `max-w-prose`, `max-w-pair`. */
+    --container-page: 1400px;
+    --container-prose: 800px;
+    --container-pair: 672px; /* Two cells plus a gap: the bento at <992px */
+
+    /* Breakpoints: the bento goes 1 column -> 2 (md) -> 4 (lg). */
+    --breakpoint-*: initial;
+    --breakpoint-md: 48rem; /* 768px */
+    --breakpoint-lg: 62rem; /* 992px */
+
+    /* Radii: 32px on every tile is the one memorable radius; 4-16px only inside embedded mockups. */
+    --radius-*: initial;
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px; /* Card */
+    --radius-lg: 16px;
+    --radius-xl: 32px; /* Tile */
+    --radius-nav: 56px; /* Nav shell and buttons */
+    --radius-pill: 999px; /* Chips, toggles, nav items, dots, tile action */
+
+    /* Shadows: warm black, low opacity; no inner shadows, no glows. */
+    --shadow-*: initial;
+    --shadow-raised: 0 1px 2px rgba(20, 20, 19, 0.06), 0 1px 3px rgba(20, 20, 19, 0.1); /* Card at rest */
+    --shadow-hover: 0 4px 6px rgba(20, 20, 19, 0.07); /* Button and tile action hover */
+    --shadow-lifted: 0 10px 15px -3px rgba(20, 20, 19, 0.1), 0 4px 6px -2px rgba(20, 20, 19, 0.05); /* Tile hover */
+    --shadow-float: 0 10px 10px -5px rgba(20, 20, 19, 0.1); /* Floating nav */
+
+    --blur-*: initial;
+    --blur-glass: 16px; /* `backdrop-blur-glass`, only with the glass surface */
+
+    /* Motion: durations are `duration-150|200|300|600`; reduced motion drops them to 1ms (base.css). */
+    --ease-*: initial;
+    --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1); /* State changes */
+    --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1); /* Entrances */
+    --default-transition-duration: 200ms;
+    --default-transition-timing-function: var(--ease-standard);
+
+    /* Stacking: `z-(--z-nav)`. */
+    --z-base: 1;
+    --z-raised: 10;
+    --z-tile: 20;
+    --z-overlay: 1000;
+    --z-nav: 4444;
+}
+
+/*
+ * Inlined so utilities reference the target variable directly: aliases follow a `data-theme` set on any element,
+ * and the font variables come from the Astro Fonts API (astro.config.ts) instead of being emitted by Tailwind.
+ */
+@theme inline {
+    /* Semantic aliases: `text-heading`, `text-copy`, `bg-tile`, `border-default`... */
+    --color-heading: var(--color-ink);
+    --color-copy: var(--color-ink-secondary);
+    --color-muted: var(--color-ink-muted);
+    --color-quiet: var(--color-ink-ghost);
+    --color-page: var(--color-canvas);
+    --color-tile: var(--color-surface-sunken);
+    --color-card: var(--color-surface);
+    --color-default: var(--color-line-strong);
+
+    /* Font families. --font-archivo and --font-jetbrains-mono come from the Astro Fonts API (astro.config.ts). */
+    --font-sans: var(--font-archivo);
+    --font-display: var(--font-archivo);
+    --font-mono: var(--font-jetbrains-mono);
+}
+
+@layer base {
+    [data-theme="dark"] {
+        --color-canvas: #1a1915;
+        --color-surface: #232220;
+        --color-surface-sunken: #201f1c;
+        --color-surface-glass: rgba(35, 34, 32, 0.8);
+        --color-surface-veil: rgba(35, 34, 32, 0.5);
+        --color-ink: #f5f4ef;
+        --color-ink-secondary: #d6d4cc;
+        --color-ink-muted: #9c9a91;
+        --color-ink-ghost: #75736c;
+        --color-ink-whisper: rgba(245, 244, 239, 0.2);
+        --color-ink-inverse: #141413;
+        --color-accent: #7fb294;
+        --color-on-accent: #141413; /* The lifted green is too light for white text */
+        --color-accent-soft: #22322a;
+        --color-signal: #d9705f;
+        --color-line-hairline: rgba(245, 244, 239, 0.08);
+        --color-line-subtle: rgba(245, 244, 239, 0.12);
+        --color-line-strong: rgba(245, 244, 239, 0.16);
+        --color-line-ring: #3a3833;
+    }
+}

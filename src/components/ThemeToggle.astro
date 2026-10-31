@@ -1,0 +1,52 @@
+---
+/**
+ * Light/dark switch: a segmented pill that writes `data-theme` on <html> and remembers the choice in `localStorage`.
+ * The first theme comes from the inline script in `Layout.astro` (stored choice, else the system preference).
+ */
+import type { Locale } from "@constants/site.constants.ts";
+import { useTranslations } from "@utils/i18n.utils.ts";
+
+interface Props {
+    locale: Locale;
+}
+
+const t = useTranslations(Astro.props.locale);
+---
+
+<div class="cd-seg" role="group" aria-label={t("theme.label")}>
+    <button type="button" class="cd-seg-option" data-theme-option="light" aria-pressed="false">
+        <span aria-hidden="true">○</span>
+        {t("theme.light")}
+    </button>
+    <button type="button" class="cd-seg-option" data-theme-option="dark" aria-pressed="false">
+        <span aria-hidden="true">●</span>
+        {t("theme.dark")}
+    </button>
+</div>
+
+<script>
+    const root = document.documentElement;
+    const options = document.querySelectorAll<HTMLButtonElement>("[data-theme-option]");
+
+    const sync = () => {
+        for (const option of options) {
+            option.setAttribute("aria-pressed", String(option.dataset.themeOption === root.dataset.theme));
+        }
+    };
+
+    for (const option of options) {
+        option.addEventListener("click", () => {
+            const theme = option.dataset.themeOption;
+            if (!theme) return;
+            root.dataset.theme = theme;
+            try {
+                localStorage.setItem("theme", theme);
+            } catch {
+                // Storage can be blocked; the theme still applies to this page
+            }
+            sync();
+        });
+    }
+
+    sync();
+</script>
