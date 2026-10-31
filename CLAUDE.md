@@ -25,7 +25,8 @@ There is no test runner configured.
 - **Everything is TypeScript**, including tool configs: `astro.config.ts`, `prettier.config.ts`, `eslint.config.ts`
   (loaded through `jiti`), `commitlint.config.ts`. Do not add `.js`/`.mjs`/`.cjs` config files. lint-staged config lives
   in `package.json`.
-- **Path aliases** (`@components`, `@layouts`, `@assets`, `@utils`, `@styles`, `@constants`) are defined in
+- **Path aliases** (`@components`, `@layouts`, `@assets`, `@utils`, `@styles`, `@constants`, `@i18n`,
+  `@templates`) are defined in
   `tsconfig.json` and duplicated in the `importOrder` regex of `prettier.config.ts`; keep both in sync when adding one.
   Import local TS files with their extension (`allowImportingTsExtensions`).
 - **File naming**: plain TypeScript modules carry their role as a suffix: `src/utils/<name>.utils.ts`,

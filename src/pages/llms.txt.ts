@@ -1,14 +1,9 @@
 import type { APIRoute } from "astro";
 import { DEFAULT_LOCALE, LOCALE_META, LOCALES, SITE } from "@constants/site.constants.ts";
 import { getIndexablePages, getPage, pagePath } from "@utils/content.utils.ts";
+import { useTranslations } from "@utils/i18n.utils.ts";
 import { markdownResponse } from "@utils/llms.utils.ts";
 import { absoluteUrl, markdownPath } from "@utils/url.utils.ts";
-
-/** Section heading per locale; the default locale goes first since it is the site's main language. */
-const SECTION_TITLE: Record<(typeof LOCALES)[number], string> = {
-    es: "Páginas",
-    en: "Pages (English)",
-};
 
 /** `/llms.txt` index (https://llmstxt.org), linking the Markdown version of every indexable page. */
 export const GET: APIRoute = async ({ site }) => {
@@ -24,7 +19,7 @@ export const GET: APIRoute = async ({ site }) => {
                 return `- [${entry.data.seo.title}](${url}): ${entry.data.seo.description}`;
             })
             .join("\n");
-        return links && `## ${SECTION_TITLE[locale]}\n\n${links}`;
+        return links && `## ${useTranslations(locale)("llms.pages")}\n\n${links}`;
     }).filter(Boolean);
 
     const languages = LOCALES.map((locale) => {
@@ -35,8 +30,8 @@ export const GET: APIRoute = async ({ site }) => {
     const llms = [
         `# ${SITE.name}`,
         `> ${home.data.seo.description}`,
-        `Sitio disponible en ${languages}. Cada página tiene una versión Markdown en su misma URL con \`.md\` al final ` +
-            `(\`/index.html.md\` para la portada). Todo el contenido junto: ${absoluteUrl("/llms-full.txt", site)}`,
+        // The index is written in the default locale, the site's main language; each locale gets its own section
+        useTranslations(DEFAULT_LOCALE)("llms.intro", { languages, fullUrl: absoluteUrl("/llms-full.txt", site) }),
         ...sections,
     ].join("\n\n");
 
