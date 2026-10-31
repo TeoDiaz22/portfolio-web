@@ -1,0 +1,18 @@
+---
+/**
+ * Template for pages without their own: the Markdown body inside `<main>`. A page named `<name>` uses
+ * `src/templates/<name>.astro` instead when it exists (see `src/pages/[...slug].astro`).
+ */
+import { render } from "astro:content";
+import type { Page } from "@utils/content.utils.ts";
+
+export interface Props {
+    page: Page;
+}
+
+const { Content } = await render(Astro.props.page.entry);
+---
+
+<main>
+    <Content />
+</main>

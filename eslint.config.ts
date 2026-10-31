@@ -14,8 +14,8 @@ export default defineConfig(
     eslintPluginAstro.configs.recommended,
     eslintPluginAstro.configs["jsx-a11y-recommended"],
     {
-        // Project configuration files run in Node, not in the browser
-        files: ["*.config.ts"],
+        // Project configuration files and scripts run in Node, not in the browser
+        files: ["*.config.ts", "scripts/**/*.ts"],
         languageOptions: {
             globals: { ...globals.node },
         },

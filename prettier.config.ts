@@ -29,7 +29,7 @@ const config: PrettierConfig & TailwindPluginOptions = {
         "<BUILTIN_MODULES>",
         "<THIRD_PARTY_MODULES>",
         // Path aliases, keep in sync with tsconfig.json "paths"
-        "^@(components|layouts|assets|utils|styles|constants)/",
+        "^@(components|layouts|assets|utils|styles|constants|i18n|templates)/",
         "^[./](?!.*\\.css$)",
         // Only applies to bindings (e.g. CSS modules); side-effect imports keep their position
         "\\.css$",

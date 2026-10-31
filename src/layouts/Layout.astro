@@ -1,18 +1,32 @@
 ---
 import "@styles/global.css";
+import LanguageSwitcher from "@components/LanguageSwitcher.astro";
+import Seo, { type Props as SeoProps } from "@components/seo/Seo.astro";
+import { AUTHOR, LOCALE_META, SITE } from "@constants/site.constants.ts";
+
+type Props = SeoProps;
+
+const { locale, alternates } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={LOCALE_META[locale].lang}>
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Seo {...Astro.props} />
+        <meta name="theme-color" content={SITE.themeColor} />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        {AUTHOR.sameAs.map((profile) => <link rel="me" href={profile} />)}
         <meta name="generator" content={Astro.generator} />
-        <title>Astro Basics</title>
     </head>
     <body>
+        <header>
+            <LanguageSwitcher locale={locale} alternates={alternates} />
+        </header>
         <slot />
     </body>
 </html>

@@ -14,7 +14,9 @@
             "@assets/*": ["./src/assets/*"],
             "@utils/*": ["./src/utils/*"],
             "@styles/*": ["./src/styles/*"],
-            "@constants/*": ["./src/constants/*"]
+            "@constants/*": ["./src/constants/*"],
+            "@i18n/*": ["./src/i18n/*"],
+            "@templates/*": ["./src/templates/*"]
         }
     }
 }
