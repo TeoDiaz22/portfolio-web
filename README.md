@@ -1,46 +1,56 @@
-# Astro Starter Kit: Basics
+# portfolio-web
+
+Portfolio built with [Astro](https://astro.build), TypeScript and Tailwind CSS.
+
+## Requirements
+
+- Node `>=22.23.4` (`.nvmrc` pins the version used for development)
+- pnpm `12` (pinned in `packageManager`)
 
 ```sh
-pnpm create astro@latest -- --template basics
+pnpm install
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+`pnpm install` also installs the Git hooks through Husky.
 
-## 🚀 Project Structure
+## Commands
 
-Inside of your Astro project, you'll see the following folders and files:
+| Command             | Action                                                   |
+| :------------------ | :------------------------------------------------------- |
+| `pnpm dev`          | Start the dev server at `localhost:4321`                 |
+| `pnpm build`        | Build the production site to `./dist/`                   |
+| `pnpm preview`      | Preview the build locally                                |
+| `pnpm format`       | Format the whole project with Prettier                   |
+| `pnpm format:check` | Check formatting without writing changes                 |
+| `pnpm lint`         | Lint with ESLint                                         |
+| `pnpm lint:fix`     | Lint and apply automatic fixes                           |
+| `pnpm typecheck`    | Type check `.astro` and `.ts` files (`astro check`)      |
+| `pnpm check`        | Run `format:check`, `lint` and `typecheck` in that order |
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+## Code quality
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+- **Prettier** (`prettier.config.ts`) formats the code, including `.astro` files, and sorts imports.
+- **ESLint** (`eslint.config.ts`) checks code quality, including accessibility rules for `.astro` files. Formatting
+  rules are disabled through `eslint-config-prettier`.
+- **Git hooks** (Husky):
+    - `pre-commit`: runs ESLint and Prettier on staged files (lint-staged).
+    - `commit-msg`: enforces [Conventional Commits](https://www.conventionalcommits.org) (commitlint).
+    - `pre-push`: runs the type check.
 
-## 🧞 Commands
+## Environment variables
 
-All commands are run from the root of the project, from a terminal:
+Variables are declared and validated with [`astro:env`](https://docs.astro.build/en/guides/environment-variables/) in
+`astro.config.ts` (`env.schema`) and imported from `astro:env/client` or `astro:env/server`.
 
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `pnpm install`         | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+Astro loads `.env.[mode]` files natively: `astro build --mode pre` reads `.env.pre`. Every `.env*` file is ignored by
+Git except `.env.template`.
 
-## 👀 Want to learn more?
+## Pinned versions
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Update these only after checking the reason they are pinned:
+
+| Package                             | Version                | Reason                                                                                                                                                                                   |
+| :---------------------------------- | :--------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `typescript`                        | `6.0.3` (+ `override`) | `@astrojs/check` supports `^5 \|\| ^6` and `typescript-eslint` requires `<6.1.0`. Without the override, TypeScript 7 gets installed transitively. Review when both support TypeScript 7. |
+| `prettier`, `prettier-plugin-astro` | exact                  | A minor release can reformat the whole repository. Update them on purpose and commit the reformat separately.                                                                            |
+| `eslint-plugin-jsx-a11y-x`          | —                      | Used instead of `eslint-plugin-jsx-a11y`, which does not support ESLint 10 yet.                                                                                                          |
