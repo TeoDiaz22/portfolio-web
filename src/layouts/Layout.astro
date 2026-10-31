@@ -3,7 +3,8 @@ import "@styles/global.css";
 import { Font } from "astro:assets";
 import LanguageSwitcher from "@components/LanguageSwitcher.astro";
 import Seo, { type Props as SeoProps } from "@components/seo/Seo.astro";
-import { AUTHOR, LOCALE_META, SITE } from "@constants/site.constants.ts";
+import { AUTHOR, LOCALE_META } from "@constants/site.constants.ts";
+import { THEME_COLORS } from "@constants/theme.constants.ts";
 
 type Props = SeoProps;
 
@@ -33,7 +34,8 @@ const { locale, alternates } = Astro.props;
         <Font cssVariable="--font-archivo" preload={[{ style: "normal", subset: "latin" }]} />
         <Font cssVariable="--font-jetbrains-mono" />
         <Seo {...Astro.props} />
-        <meta name="theme-color" content={SITE.themeColor} />
+        <meta name="theme-color" content={THEME_COLORS.light.canvas} media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content={THEME_COLORS.dark.canvas} media="(prefers-color-scheme: dark)" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

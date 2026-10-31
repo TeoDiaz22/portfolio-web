@@ -19,7 +19,6 @@ export const SITE = {
     name: "Mateo Díaz",
     /** `%s` is replaced by the page title. The home page can opt out with `seo.fullTitle`. */
     titleTemplate: "%s · Mateo Díaz",
-    themeColor: "#0f172a",
     /** X/Twitter handle including `@`, or undefined to omit `twitter:site` and `twitter:creator`. */
     twitterHandle: undefined as string | undefined,
 } as const;
