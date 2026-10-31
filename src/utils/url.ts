@@ -22,3 +22,8 @@ export function absoluteUrl(path: string, site: URL | undefined): string {
 export function markdownPath(path: string): string {
     return path === "/" ? "/index.html.md" : `${path}.md`;
 }
+
+/** Generated Open Graph image of a page (see `src/pages/og/[...path].png.ts`): `/` → `/og/index.png`. */
+export function ogImagePath(path: string): string {
+    return `/og${path === "/" ? "/index" : path}.png`;
+}

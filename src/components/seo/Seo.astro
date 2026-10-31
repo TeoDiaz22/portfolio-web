@@ -10,7 +10,7 @@ import { DEFAULT_LOCALE, LOCALE_META, LOCALES, SITE, type Locale } from "@consta
 import { isIndexable } from "@utils/env.ts";
 import { getAlternatePaths } from "@utils/i18n.ts";
 import { pageGraph, serializeJsonLd } from "@utils/schema.ts";
-import { absoluteUrl, markdownPath, toPublicPath } from "@utils/url.ts";
+import { absoluteUrl, markdownPath, ogImagePath, toPublicPath } from "@utils/url.ts";
 import type { SeoData } from "../../content.config.ts";
 
 export interface Props {
@@ -40,10 +40,11 @@ const alternates = Object.fromEntries(
     LOCALES.map((alternate) => [alternate, absoluteUrl(alternatePaths[alternate], Astro.site)]),
 ) as Record<Locale, string>;
 
-const ogImage = seo.image
-    ? await getImage({ src: seo.image, width: 1200, height: 630, fit: "cover", format: "jpg" })
-    : undefined;
-const ogImageUrl = ogImage ? absoluteUrl(ogImage.src, Astro.site) : undefined;
+// `seo.image` is resized to the Open Graph size; without it, the image generated at build time is used
+const ogImageSrc = seo.image
+    ? (await getImage({ src: seo.image, width: 1200, height: 630, fit: "cover", format: "jpg" })).src
+    : ogImagePath(path);
+const ogImageUrl = absoluteUrl(ogImageSrc, Astro.site);
 const ogImageAlt = seo.imageAlt ?? seo.title;
 
 const isHome = alternatePaths[DEFAULT_LOCALE] === "/";
@@ -94,21 +95,15 @@ const graph = pageGraph(
         <meta property="og:locale:alternate" content={LOCALE_META[other].ogLocale} />
     ))
 }
-{
-    ogImageUrl && (
-        <>
-            <meta property="og:image" content={ogImageUrl} />
-            <meta property="og:image:width" content="1200" />
-            <meta property="og:image:height" content="630" />
-            <meta property="og:image:alt" content={ogImageAlt} />
-        </>
-    )
-}
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={ogImageAlt} />
 {seo.publishedAt && <meta property="article:published_time" content={seo.publishedAt.toISOString()} />}
 {seo.updatedAt && <meta property="article:modified_time" content={seo.updatedAt.toISOString()} />}
 
-<meta name="twitter:card" content={ogImageUrl ? "summary_large_image" : "summary"} />
-{ogImageUrl && <meta name="twitter:image:alt" content={ogImageAlt} />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image:alt" content={ogImageAlt} />
 {
     SITE.twitterHandle && (
         <>

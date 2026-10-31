@@ -22,8 +22,11 @@
         "check": "pnpm format:check && pnpm lint && pnpm typecheck"
     },
     "dependencies": {
+        "@fontsource/inter": "^5.3.0",
         "@tailwindcss/vite": "^4.3.3",
         "astro": "^7.4.4",
+        "satori": "^0.63.2",
+        "sharp": "^0.35.5",
         "tailwindcss": "^4.3.3"
     },
     "devDependencies": {
