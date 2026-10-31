@@ -8,7 +8,7 @@ export const GET: APIRoute = async () => {
     const manifest = {
         name: SITE.name,
         short_name: SITE.name,
-        description: home.data.seo.description,
+        description: home.entry.data.seo.description,
         lang: LOCALE_META[DEFAULT_LOCALE].lang,
         start_url: "/",
         display: "browser",

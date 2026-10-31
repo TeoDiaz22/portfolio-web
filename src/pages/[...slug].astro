@@ -1,0 +1,32 @@
+---
+/**
+ * Every page of the `pages` collection in every locale. The template is `src/templates/<page name>.astro` when it
+ * exists, otherwise `src/templates/default.astro`; adding a page only takes its Markdown files.
+ */
+import Layout from "@layouts/Layout.astro";
+import type { Props as TemplateProps } from "@templates/default.astro";
+import { getAlternates, getPages, type Alternates, type Page } from "@utils/content.utils.ts";
+
+export async function getStaticPaths() {
+    const pages = await getPages();
+    return pages.map((page) => ({
+        params: { slug: page.path === "/" ? undefined : page.path.slice(1) },
+        props: { page, alternates: getAlternates(pages, page.name) },
+    }));
+}
+
+interface Props {
+    page: Page;
+    alternates: Alternates;
+}
+
+type TemplateComponent = (props: TemplateProps) => unknown;
+const templates = import.meta.glob<{ default: TemplateComponent }>("/src/templates/*.astro", { eager: true });
+
+const { page, alternates } = Astro.props;
+const Template = (templates[`/src/templates/${page.name}.astro`] ?? templates["/src/templates/default.astro"])!.default;
+---
+
+<Layout seo={page.entry.data.seo} locale={page.locale} alternates={alternates}>
+    <Template page={page} />
+</Layout>

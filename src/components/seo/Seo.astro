@@ -7,8 +7,9 @@ import { getImage } from "astro:assets";
 import { BING_SITE_VERIFICATION, GOOGLE_SITE_VERIFICATION } from "astro:env/server";
 import type { Thing } from "schema-dts";
 import { DEFAULT_LOCALE, LOCALE_META, LOCALES, SITE, type Locale } from "@constants/site.constants.ts";
+import type { Alternates } from "@utils/content.utils.ts";
 import { isIndexable } from "@utils/env.utils.ts";
-import { getAlternatePaths, useTranslations } from "@utils/i18n.utils.ts";
+import { localizePath, useTranslations } from "@utils/i18n.utils.ts";
 import { pageGraph, serializeJsonLd } from "@utils/schema.utils.ts";
 import { absoluteUrl, markdownPath, ogImagePath, toPublicPath } from "@utils/url.utils.ts";
 import type { SeoData } from "../../content.config.ts";
@@ -16,16 +17,18 @@ import type { SeoData } from "../../content.config.ts";
 export interface Props {
     seo: SeoData;
     locale: Locale;
+    /** Path of this page in each locale it exists in (including the current one), for `hreflang`. */
+    alternates: Alternates;
     /**
      * Trail after the home page, for nested pages (e.g. projects → project). Defaults to the current page alone.
-     * Paths are locale-independent (`/projects`) and get localized here.
+     * Paths are public paths in the current locale (`/proyectos`, `/en/projects`).
      */
     breadcrumbs?: { name: string; path: string }[];
     /** Extra JSON-LD nodes for this page (e.g. a project as `CreativeWork`). */
     jsonLd?: Thing[];
 }
 
-const { seo, locale, breadcrumbs, jsonLd } = Astro.props;
+const { seo, locale, alternates: alternatePaths, breadcrumbs, jsonLd } = Astro.props;
 const site = absoluteUrl("/", Astro.site);
 
 const path = toPublicPath(Astro.url.pathname);
@@ -35,10 +38,11 @@ const robots =
     isIndexable && !seo.noindex
         ? "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
         : "noindex, nofollow";
-const alternatePaths = getAlternatePaths(path);
-const alternates = Object.fromEntries(
-    LOCALES.map((alternate) => [alternate, absoluteUrl(alternatePaths[alternate], Astro.site)]),
-) as Record<Locale, string>;
+const alternates = LOCALES.flatMap((alternate) => {
+    const alternatePath = alternatePaths[alternate];
+    return alternatePath ? [{ locale: alternate, url: absoluteUrl(alternatePath, Astro.site) }] : [];
+});
+const defaultAlternate = alternates.find((alternate) => alternate.locale === DEFAULT_LOCALE);
 
 // `seo.image` is resized to the Open Graph size; without it, the image generated at build time is used
 const ogImageSrc = seo.image
@@ -47,8 +51,9 @@ const ogImageSrc = seo.image
 const ogImageUrl = absoluteUrl(ogImageSrc, Astro.site);
 const ogImageAlt = seo.imageAlt ?? seo.title;
 
-const isHome = alternatePaths[DEFAULT_LOCALE] === "/";
-const trail = breadcrumbs ?? (isHome ? [] : [{ name: seo.title, path: alternatePaths[DEFAULT_LOCALE] }]);
+const t = useTranslations(locale);
+const homePath = localizePath("/", locale);
+const trail = breadcrumbs ?? (path === homePath ? [] : [{ name: seo.title, path }]);
 const graph = pageGraph(
     site,
     {
@@ -61,14 +66,8 @@ const graph = pageGraph(
         publishedAt: seo.publishedAt,
         updatedAt: seo.updatedAt,
         breadcrumbs: [
-            {
-                name: useTranslations(locale)("breadcrumb.home"),
-                url: absoluteUrl(getAlternatePaths("/")[locale], Astro.site),
-            },
-            ...trail.map((crumb) => ({
-                name: crumb.name,
-                url: absoluteUrl(getAlternatePaths(crumb.path)[locale], Astro.site),
-            })),
+            { name: t("breadcrumb.home"), url: absoluteUrl(homePath, Astro.site) },
+            ...trail.map((crumb) => ({ name: crumb.name, url: absoluteUrl(crumb.path, Astro.site) })),
         ],
     },
     jsonLd,
@@ -84,10 +83,10 @@ const graph = pageGraph(
     // noindex pages (e.g. 404) may exist in a single locale and have no Markdown version (src/pages/[...path].md.ts)
     !seo.noindex && (
         <>
-            {LOCALES.map((alternate) => (
-                <link rel="alternate" hreflang={alternate} href={alternates[alternate]} />
+            {alternates.map((alternate) => (
+                <link rel="alternate" hreflang={LOCALE_META[alternate.locale].lang} href={alternate.url} />
             ))}
-            <link rel="alternate" hreflang="x-default" href={alternates[DEFAULT_LOCALE]} />
+            {defaultAlternate && <link rel="alternate" hreflang="x-default" href={defaultAlternate.url} />}
             <link rel="alternate" type="text/markdown" href={markdownPath(path)} />
         </>
     )
@@ -100,9 +99,9 @@ const graph = pageGraph(
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content={LOCALE_META[locale].ogLocale} />
 {
-    LOCALES.filter((other) => other !== locale).map((other) => (
-        <meta property="og:locale:alternate" content={LOCALE_META[other].ogLocale} />
-    ))
+    alternates
+        .filter((alternate) => alternate.locale !== locale)
+        .map((alternate) => <meta property="og:locale:alternate" content={LOCALE_META[alternate.locale].ogLocale} />)
 }
 <meta property="og:image" content={ogImageUrl} />
 <meta property="og:image:width" content="1200" />

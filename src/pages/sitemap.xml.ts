@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_LOCALE } from "@constants/site.constants.ts";
-import { getIndexablePages, pagePath } from "@utils/content.utils.ts";
+import { DEFAULT_LOCALE, LOCALE_META } from "@constants/site.constants.ts";
+import { getIndexablePages } from "@utils/content.utils.ts";
 import { absoluteUrl } from "@utils/url.utils.ts";
 
 const escapeXml = (value: string) =>
@@ -13,25 +13,26 @@ const escapeXml = (value: string) =>
 export const GET: APIRoute = async ({ site }) => {
     const urls: string[] = [];
 
-    for (const [name, translations] of await getIndexablePages()) {
-        const links = [...translations.keys()].map(
-            (locale) =>
-                `<xhtml:link rel="alternate" hreflang="${locale}" href="${escapeXml(absoluteUrl(pagePath(name, locale), site))}"/>`,
+    for (const translations of (await getIndexablePages()).values()) {
+        const links = translations.map(
+            (page) =>
+                `<xhtml:link rel="alternate" hreflang="${LOCALE_META[page.locale].lang}" href="${escapeXml(absoluteUrl(page.path, site))}"/>`,
         );
-        if (translations.has(DEFAULT_LOCALE)) {
-            const href = escapeXml(absoluteUrl(pagePath(name, DEFAULT_LOCALE), site));
+        const defaultPage = translations.find((page) => page.locale === DEFAULT_LOCALE);
+        if (defaultPage) {
+            const href = escapeXml(absoluteUrl(defaultPage.path, site));
             links.push(`<xhtml:link rel="alternate" hreflang="x-default" href="${href}"/>`);
         }
 
-        for (const [locale, entry] of translations) {
-            const loc = escapeXml(entry.data.seo.canonical ?? absoluteUrl(pagePath(name, locale), site));
-            const lastmod = entry.data.seo.updatedAt ?? entry.data.seo.publishedAt;
+        for (const page of translations) {
+            const { canonical, updatedAt, publishedAt } = page.entry.data.seo;
+            const lastmod = updatedAt ?? publishedAt;
             urls.push(
                 [
                     "<url>",
-                    `<loc>${loc}</loc>`,
+                    `<loc>${escapeXml(canonical ?? absoluteUrl(page.path, site))}</loc>`,
                     ...(lastmod ? [`<lastmod>${lastmod.toISOString()}</lastmod>`] : []),
-                    ...(translations.size > 1 ? links : []),
+                    ...(translations.length > 1 ? links : []),
                     "</url>",
                 ].join(""),
             );
