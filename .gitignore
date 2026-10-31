@@ -11,11 +11,10 @@ node_modules/
 npm-debug.log*
 pnpm-debug.log*
 
-# environment variables
+# environment variables (never commit secrets)
 .env
-.env.local
-.env.*.local
-.env.production
+.env.*
+!.env.template
 
 # OS
 .DS_Store
