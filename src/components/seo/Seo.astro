@@ -1,22 +1,32 @@
 ---
 /**
- * Every SEO tag of a page: title, description, canonical, robots, hreflang, Open Graph and Twitter Card.
+ * Every SEO tag of a page: title, description, canonical, robots, hreflang, Open Graph, Twitter Card and JSON-LD.
  * Rendered once by `Layout.astro`; pages only pass their `seo` data from a content collection.
  */
 import { getImage } from "astro:assets";
 import { BING_SITE_VERIFICATION, GOOGLE_SITE_VERIFICATION } from "astro:env/server";
+import type { Thing } from "schema-dts";
 import { DEFAULT_LOCALE, LOCALE_META, LOCALES, SITE, type Locale } from "@constants/site.ts";
 import { isIndexable } from "@utils/env.ts";
 import { getAlternatePaths } from "@utils/i18n.ts";
+import { pageGraph, serializeJsonLd } from "@utils/schema.ts";
 import { absoluteUrl, toPublicPath } from "@utils/url.ts";
 import type { SeoData } from "../../content.config.ts";
 
-interface Props {
+export interface Props {
     seo: SeoData;
     locale: Locale;
+    /**
+     * Trail after the home page, for nested pages (e.g. projects → project). Defaults to the current page alone.
+     * Paths are locale-independent (`/projects`) and get localized here.
+     */
+    breadcrumbs?: { name: string; path: string }[];
+    /** Extra JSON-LD nodes for this page (e.g. a project as `CreativeWork`). */
+    jsonLd?: Thing[];
 }
 
-const { seo, locale } = Astro.props;
+const { seo, locale, breadcrumbs, jsonLd } = Astro.props;
+const site = absoluteUrl("/", Astro.site);
 
 const path = toPublicPath(Astro.url.pathname);
 const title = seo.fullTitle ? seo.title : SITE.titleTemplate.replace("%s", seo.title);
@@ -35,6 +45,30 @@ const ogImage = seo.image
     : undefined;
 const ogImageUrl = ogImage ? absoluteUrl(ogImage.src, Astro.site) : undefined;
 const ogImageAlt = seo.imageAlt ?? seo.title;
+
+const isHome = alternatePaths[DEFAULT_LOCALE] === "/";
+const trail = breadcrumbs ?? (isHome ? [] : [{ name: seo.title, path: alternatePaths[DEFAULT_LOCALE] }]);
+const graph = pageGraph(
+    site,
+    {
+        type: seo.pageType,
+        url: canonical,
+        title: seo.title,
+        description: seo.description,
+        locale,
+        imageUrl: ogImageUrl,
+        publishedAt: seo.publishedAt,
+        updatedAt: seo.updatedAt,
+        breadcrumbs: [
+            { name: LOCALE_META[locale].homeLabel, url: absoluteUrl(getAlternatePaths("/")[locale], Astro.site) },
+            ...trail.map((crumb) => ({
+                name: crumb.name,
+                url: absoluteUrl(getAlternatePaths(crumb.path)[locale], Astro.site),
+            })),
+        ],
+    },
+    jsonLd,
+);
 ---
 
 <title>{title}</title>
@@ -82,3 +116,5 @@ const ogImageAlt = seo.imageAlt ?? seo.title;
 
 {GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={GOOGLE_SITE_VERIFICATION} />}
 {BING_SITE_VERIFICATION && <meta name="msvalidate.01" content={BING_SITE_VERIFICATION} />}
+
+<script is:inline type="application/ld+json" set:html={serializeJsonLd(graph)} />

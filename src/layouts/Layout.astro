@@ -1,15 +1,11 @@
 ---
 import "@styles/global.css";
-import Seo from "@components/seo/Seo.astro";
-import { AUTHOR, LOCALE_META, SITE, type Locale } from "@constants/site.ts";
-import type { SeoData } from "../content.config.ts";
+import Seo, { type Props as SeoProps } from "@components/seo/Seo.astro";
+import { AUTHOR, LOCALE_META, SITE } from "@constants/site.ts";
 
-interface Props {
-    seo: SeoData;
-    locale: Locale;
-}
+type Props = SeoProps;
 
-const { seo, locale } = Astro.props;
+const { locale } = Astro.props;
 ---
 
 <!doctype html>
@@ -17,7 +13,7 @@ const { seo, locale } = Astro.props;
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Seo seo={seo} locale={locale} />
+        <Seo {...Astro.props} />
         <meta name="theme-color" content={SITE.themeColor} />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" />

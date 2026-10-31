@@ -7,9 +7,9 @@ export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = "es";
 
 /** Locale data that differs per language. `ogLocale` uses the `language_TERRITORY` format required by Open Graph. */
-export const LOCALE_META: Record<Locale, { lang: string; ogLocale: string; name: string }> = {
-    es: { lang: "es", ogLocale: "es_ES", name: "Español" },
-    en: { lang: "en", ogLocale: "en_US", name: "English" },
+export const LOCALE_META: Record<Locale, { lang: string; ogLocale: string; name: string; homeLabel: string }> = {
+    es: { lang: "es", ogLocale: "es_ES", name: "Español", homeLabel: "Inicio" },
+    en: { lang: "en", ogLocale: "en_US", name: "English", homeLabel: "Home" },
 };
 
 export const SITE = {

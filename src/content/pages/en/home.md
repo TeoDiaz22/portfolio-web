@@ -4,6 +4,7 @@ seo:
     fullTitle: true
     description: Portfolio of Mateo Díaz, software developer. Projects, experience and how to get in touch.
     ogType: profile
+    pageType: ProfilePage
 ---
 
 # Mateo Díaz

@@ -19,6 +19,8 @@ export const seoSchema = ({ image }: SchemaContext) =>
         canonical: z.url().optional(),
         noindex: z.boolean().default(false),
         ogType: z.enum(["website", "article", "profile"]).default("website"),
+        /** schema.org type of the page node in JSON-LD. */
+        pageType: z.enum(["WebPage", "ProfilePage", "AboutPage", "ContactPage", "CollectionPage"]).default("WebPage"),
         publishedAt: z.coerce.date().optional(),
         /** Feeds the sitemap `<lastmod>` and JSON-LD `dateModified`. */
         updatedAt: z.coerce.date().optional(),
