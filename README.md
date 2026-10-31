@@ -19,6 +19,8 @@ pnpm install
 | :------------------ | :------------------------------------------------------- |
 | `pnpm dev`          | Start the dev server at `localhost:4321`                 |
 | `pnpm build`        | Build the production site to `./dist/`                   |
+| `pnpm build:pre`    | Build the staging site to `./dist/` (`--mode pre`)       |
+| `pnpm indexnow`     | Submit the built sitemap URLs to IndexNow (production)   |
 | `pnpm preview`      | Preview the build locally                                |
 | `pnpm format`       | Format the whole project with Prettier                   |
 | `pnpm format:check` | Check formatting without writing changes                 |
@@ -55,6 +57,52 @@ There are two environments:
 `SITE_ENV` defaults to `staging`, so a build without it is never indexable. `SITE_URL` sets Astro's `site` (canonical
 URLs, Open Graph, sitemap); it is read in `astro.config.ts` before Astro loads the env files, with the same lookup
 order as Vite.
+
+## SEO
+
+Every page gets its SEO from the `pages` content collection, and `src/components/seo/Seo.astro` (rendered by
+`Layout.astro`) turns it into title, description, canonical, robots, `hreflang`, Open Graph, Twitter Card and JSON-LD.
+Site-wide values (name, author, social profiles, theme color, blocked AI crawlers) live in `src/constants/site.ts`.
+
+### Adding a page
+
+1. Create `src/content/pages/es/<name>.md` and `src/content/pages/en/<name>.md` with a `seo` block (validated by
+   `seoSchema` in `src/content.config.ts`; the build fails if a title or description is too long):
+
+    ```yaml
+    seo:
+        title: Sobre mí # ≤ 60 chars, rendered as "Sobre mí · Mateo Díaz"
+        description: … # 50–160 chars
+        pageType: AboutPage # JSON-LD type (WebPage by default)
+        updatedAt: 2026-10-31 # sitemap <lastmod> and dateModified
+        # image, imageAlt, noindex, canonical, ogType, fullTitle, publishedAt are optional
+    ```
+
+2. Create `src/pages/[...lang]/<name>.astro` (copy `index.astro` and change the page name). It builds `/<name>` and
+   `/en/<name>`.
+
+The file name is the route (`home` is `/`). With that, the page is automatically included in the sitemap,
+`llms.txt`, `llms-full.txt`, gets its Markdown version (`/<name>.md`) and its Open Graph image (`/og/<name>.png`).
+`noindex: true` removes it from all of them.
+
+### Generated files
+
+| URL                                     | Source                              |
+| :-------------------------------------- | :---------------------------------- |
+| `/robots.txt`                           | `src/pages/robots.txt.ts`           |
+| `/sitemap.xml`                          | `src/pages/sitemap.xml.ts`          |
+| `/llms.txt`, `/llms-full.txt`           | `src/pages/llms*.txt.ts`            |
+| `/<page>.md`, `/index.html.md`          | `src/pages/[...path].md.ts`         |
+| `/og/<page>.png`                        | `src/pages/og/[...path].png.ts`     |
+| `/manifest.webmanifest`, icons          | generated from `public/favicon.svg` |
+| `/<INDEXNOW_KEY>.txt` (production only) | `src/pages/[indexnow].txt.ts`       |
+
+### Pending until the hosting is chosen
+
+- Send `X-Robots-Tag: noindex` on every staging response (covers images, `.md` and `.txt`, which have no meta tags)
+  and, ideally, protect staging with basic auth.
+- Run `pnpm indexnow` after each production deploy.
+- Lighthouse CI (`.github/workflows/lighthouse.yml`) already runs on pull requests against a production build.
 
 ## Pinned versions
 
