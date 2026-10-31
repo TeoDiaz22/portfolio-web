@@ -32,5 +32,5 @@ export default defineConfig(
         },
     },
     // Must stay last to turn off rules that conflict with Prettier
-    eslintConfigPrettier
+    eslintConfigPrettier,
 );
