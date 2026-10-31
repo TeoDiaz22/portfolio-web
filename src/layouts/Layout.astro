@@ -1,16 +1,28 @@
 ---
 import "@styles/global.css";
+import Seo from "@components/seo/Seo.astro";
+import { AUTHOR, LOCALE_META, SITE, type Locale } from "@constants/site.ts";
+import type { SeoData } from "../content.config.ts";
+
+interface Props {
+    seo: SeoData;
+    locale: Locale;
+}
+
+const { seo, locale } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={LOCALE_META[locale].lang}>
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Seo seo={seo} locale={locale} />
+        <meta name="theme-color" content={SITE.themeColor} />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" />
+        {AUTHOR.sameAs.map((profile) => <link rel="me" href={profile} />)}
         <meta name="generator" content={Astro.generator} />
-        <title>Astro Basics</title>
     </head>
     <body>
         <slot />

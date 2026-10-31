@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 Personal portfolio built with Astro 7, TypeScript (strict) and Tailwind CSS 4. No UI framework integration (no React) for
-now. `src/` still contains the Astro starter (`Welcome.astro`), meant to be replaced.
+now.
 
 See also `AGENTS.md` (dev server usage and links to the Astro guides to consult before routing, components, content,
 styling or i18n work).

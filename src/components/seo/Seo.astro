@@ -1,0 +1,84 @@
+---
+/**
+ * Every SEO tag of a page: title, description, canonical, robots, hreflang, Open Graph and Twitter Card.
+ * Rendered once by `Layout.astro`; pages only pass their `seo` data from a content collection.
+ */
+import { getImage } from "astro:assets";
+import { BING_SITE_VERIFICATION, GOOGLE_SITE_VERIFICATION } from "astro:env/server";
+import { DEFAULT_LOCALE, LOCALE_META, LOCALES, SITE, type Locale } from "@constants/site.ts";
+import { isIndexable } from "@utils/env.ts";
+import { getAlternatePaths } from "@utils/i18n.ts";
+import { absoluteUrl, toPublicPath } from "@utils/url.ts";
+import type { SeoData } from "../../content.config.ts";
+
+interface Props {
+    seo: SeoData;
+    locale: Locale;
+}
+
+const { seo, locale } = Astro.props;
+
+const path = toPublicPath(Astro.url.pathname);
+const title = seo.fullTitle ? seo.title : SITE.titleTemplate.replace("%s", seo.title);
+const canonical = seo.canonical ?? absoluteUrl(path, Astro.site);
+const robots =
+    isIndexable && !seo.noindex
+        ? "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+        : "noindex, nofollow";
+const alternatePaths = getAlternatePaths(path);
+const alternates = Object.fromEntries(
+    LOCALES.map((alternate) => [alternate, absoluteUrl(alternatePaths[alternate], Astro.site)]),
+) as Record<Locale, string>;
+
+const ogImage = seo.image
+    ? await getImage({ src: seo.image, width: 1200, height: 630, fit: "cover", format: "jpg" })
+    : undefined;
+const ogImageUrl = ogImage ? absoluteUrl(ogImage.src, Astro.site) : undefined;
+const ogImageAlt = seo.imageAlt ?? seo.title;
+---
+
+<title>{title}</title>
+<meta name="description" content={seo.description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={robots} />
+
+{LOCALES.map((alternate) => <link rel="alternate" hreflang={alternate} href={alternates[alternate]} />)}
+<link rel="alternate" hreflang="x-default" href={alternates[DEFAULT_LOCALE]} />
+
+<meta property="og:type" content={seo.ogType} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={seo.title} />
+<meta property="og:description" content={seo.description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={LOCALE_META[locale].ogLocale} />
+{
+    LOCALES.filter((other) => other !== locale).map((other) => (
+        <meta property="og:locale:alternate" content={LOCALE_META[other].ogLocale} />
+    ))
+}
+{
+    ogImageUrl && (
+        <>
+            <meta property="og:image" content={ogImageUrl} />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+            <meta property="og:image:alt" content={ogImageAlt} />
+        </>
+    )
+}
+{seo.publishedAt && <meta property="article:published_time" content={seo.publishedAt.toISOString()} />}
+{seo.updatedAt && <meta property="article:modified_time" content={seo.updatedAt.toISOString()} />}
+
+<meta name="twitter:card" content={ogImageUrl ? "summary_large_image" : "summary"} />
+{ogImageUrl && <meta name="twitter:image:alt" content={ogImageAlt} />}
+{
+    SITE.twitterHandle && (
+        <>
+            <meta name="twitter:site" content={SITE.twitterHandle} />
+            <meta name="twitter:creator" content={SITE.twitterHandle} />
+        </>
+    )
+}
+
+{GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={GOOGLE_SITE_VERIFICATION} />}
+{BING_SITE_VERIFICATION && <meta name="msvalidate.01" content={BING_SITE_VERIFICATION} />}

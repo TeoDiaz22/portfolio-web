@@ -1,0 +1,23 @@
+---
+import { render } from "astro:content";
+import type { Locale } from "@constants/site.ts";
+import Layout from "@layouts/Layout.astro";
+import { getPage } from "@utils/content.ts";
+import { localeStaticPaths } from "@utils/i18n.ts";
+
+export const getStaticPaths = localeStaticPaths;
+
+interface Props {
+    locale: Locale;
+}
+
+const { locale } = Astro.props;
+const page = await getPage("home", locale);
+const { Content } = await render(page);
+---
+
+<Layout seo={page.data.seo} locale={locale}>
+    <main>
+        <Content />
+    </main>
+</Layout>

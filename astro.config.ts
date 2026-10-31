@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { parseEnv } from "node:util";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField } from "astro/config";
+import { DEFAULT_LOCALE, LOCALES } from "./src/constants/site.ts";
 
 /**
  * Astro loads `.env.[mode]` only after reading this file, so `site` cannot come from `astro:env`.
@@ -38,8 +39,8 @@ export default defineConfig({
     prerenderConflictBehavior: "error",
 
     i18n: {
-        locales: ["es", "en"],
-        defaultLocale: "es",
+        locales: [...LOCALES],
+        defaultLocale: DEFAULT_LOCALE,
         routing: {
             prefixDefaultLocale: false,
         },
