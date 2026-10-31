@@ -43,7 +43,18 @@ Variables are declared and validated with [`astro:env`](https://docs.astro.build
 `astro.config.ts` (`env.schema`) and imported from `astro:env/client` or `astro:env/server`.
 
 Astro loads `.env.[mode]` files natively: `astro build --mode pre` reads `.env.pre`. Every `.env*` file is ignored by
-Git except `.env.template`.
+Git except `.env.template`, which lists every variable.
+
+There are two environments:
+
+| Environment | Build command    | `SITE_ENV`   | Indexing                                         |
+| :---------- | :--------------- | :----------- | :----------------------------------------------- |
+| Production  | `pnpm build`     | `production` | Indexable, `robots.txt` allows and links sitemap |
+| Staging     | `pnpm build:pre` | `staging`    | `noindex` on every page, `robots.txt` blocks all |
+
+`SITE_ENV` defaults to `staging`, so a build without it is never indexable. `SITE_URL` sets Astro's `site` (canonical
+URLs, Open Graph, sitemap); it is read in `astro.config.ts` before Astro loads the env files, with the same lookup
+order as Vite.
 
 ## Pinned versions
 
