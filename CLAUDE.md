@@ -35,7 +35,11 @@ There is no test runner configured.
 - `verbatimModuleSyntax` is on: type-only imports must use `import type`.
 - Prettier sorts imports, but side-effect imports (`import "@styles/global.css"`) intentionally keep their position so
   the CSS cascade order is not altered. It also sorts Tailwind classes (`tailwindStylesheet: ./src/styles/global.css`).
-- Tailwind entry point is `src/styles/global.css`, imported once in `src/layouts/Layout.astro`.
+- Tailwind entry point is `src/styles/global.css`, imported once in `src/layouts/Layout.astro`. It imports the design
+  system: `theme.css` (tokens as the Tailwind theme; default colors, sizes, weights, radii, shadows and breakpoints are
+  reset, so only the system's values exist), `base.css` and `components.css` (the `.cd-*` component classes as
+  `@utility`). Dark mode is `data-theme="dark"` on `<html>`: color variables are redefined there, so color utilities
+  need no `dark:` variant. Fonts (Archivo, JetBrains Mono) come from the Astro Fonts API in `astro.config.ts`.
 - ESLint includes `astro/jsx-a11y` accessibility rules for `.astro` files (via `eslint-plugin-jsx-a11y-x`).
 - Environment variables go through `astro:env`: declare them in `env.schema` in `astro.config.ts` and import from
   `astro:env/client` or `astro:env/server`. Per-environment values use Astro modes (`astro build --mode pre` reads

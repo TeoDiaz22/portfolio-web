@@ -1,0 +1,716 @@
+/*
+ * Component classes of the design system (`.cd-*`), declared as Tailwind utilities so they work with variants
+ * (`md:cd-span-wide`), are sorted by Prettier and can be overridden by any other utility in the markup.
+ * Values come from the theme (theme.css); the only literals are measurements the system defines per component.
+ */
+
+/* Layout: container and bento grid. 4 columns of 328px -> 2 (<992px, centered at 672px) -> 1 (<768px). */
+
+@utility cd-body-root {
+    margin: 0;
+    background-color: var(--color-canvas);
+    color: var(--color-ink-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--text-ui);
+    line-height: var(--text-ui--line-height);
+    -webkit-font-smoothing: antialiased;
+}
+
+@utility cd-container {
+    width: 100%;
+    max-width: var(--container-page);
+    margin-inline: auto;
+    padding-inline: var(--spacing-gutter);
+}
+
+@utility cd-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: var(--spacing-cell);
+    gap: var(--spacing-gutter);
+
+    @variant max-lg {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: var(--container-pair);
+        margin-inline: auto;
+    }
+
+    @variant max-md {
+        grid-template-columns: minmax(0, 1fr);
+        grid-auto-rows: minmax(var(--spacing-cell), auto);
+    }
+}
+
+@utility cd-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: var(--container-pair);
+    margin-inline: auto;
+}
+
+/* The bento only knows four spans; a fifth is never invented. */
+@utility cd-span-sq {
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+@utility cd-span-wide {
+    grid-column: span 2;
+    grid-row: span 1;
+
+    @variant max-md {
+        grid-column: span 1;
+    }
+}
+
+@utility cd-span-tall {
+    grid-column: span 1;
+    grid-row: span 2;
+
+    @variant max-md {
+        grid-row: span 1;
+    }
+}
+
+@utility cd-span-hero {
+    grid-column: span 2;
+    grid-row: span 2;
+
+    @variant max-md {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+}
+
+/* Tile: the atomic unit. Sunken grey, 32px radius, 32px padding, no border, no shadow at rest. */
+
+@utility cd-tile {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-surface-sunken);
+    border-radius: var(--radius-xl);
+    padding: --spacing(8);
+    transition:
+        box-shadow 200ms var(--ease-standard),
+        transform 200ms var(--ease-standard);
+
+    & img,
+    & video {
+        display: block;
+        max-width: 100%;
+    }
+}
+
+@utility cd-tile--snug {
+    padding: --spacing(6);
+}
+
+@utility cd-tile--flush {
+    padding: 0;
+}
+
+@utility cd-tile--center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+@utility cd-tile--media {
+    background-color: var(--color-ink);
+}
+
+/* Hover changes the shadow; nothing moves. */
+@utility cd-tile--interactive {
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: var(--shadow-lifted);
+    }
+}
+
+/* Circular action anchored to the tile's bottom-left corner; the ↗ glyph carries the meaning. */
+@utility cd-tile-action {
+    position: absolute;
+    left: --spacing(8);
+    bottom: --spacing(8);
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border: 4px solid var(--color-line-ring);
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-veil);
+    color: var(--color-ink);
+    text-decoration: none;
+    transition:
+        background-color 200ms var(--ease-standard),
+        border-color 200ms var(--ease-standard),
+        box-shadow 200ms var(--ease-standard);
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.7);
+        border-color: #fff;
+        box-shadow: var(--shadow-hover);
+    }
+}
+
+@utility cd-tile-action--sm {
+    width: 40px;
+    height: 40px;
+    border-width: 2px;
+    left: --spacing(6);
+    bottom: --spacing(6);
+}
+
+/* White inner card, only for mockup layers inside a tile. */
+@utility cd-card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-raised);
+    padding: --spacing(4);
+}
+
+/* Floating nav: the single fixed element. A sticky centered pill, no top bar. */
+
+@utility cd-nav-dock {
+    position: sticky;
+    top: --spacing(6);
+    z-index: var(--z-nav);
+    display: flex;
+    justify-content: center;
+}
+
+@utility cd-nav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: --spacing(1);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-nav);
+    background-color: var(--color-surface-glass);
+    -webkit-backdrop-filter: blur(var(--blur-glass));
+    backdrop-filter: blur(var(--blur-glass));
+    box-shadow: var(--shadow-float);
+}
+
+@utility cd-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: --spacing(2);
+    min-width: 112px;
+    height: 44px;
+    padding: --spacing(3) --spacing(6);
+    border-radius: var(--radius-pill);
+    font-size: var(--text-ui);
+    line-height: var(--text-ui--line-height);
+    color: var(--color-ink-ghost);
+    text-decoration: none;
+    transition: color 200ms var(--ease-standard);
+
+    &:hover {
+        color: var(--color-ink-secondary);
+    }
+
+    &[aria-current="page"] {
+        color: var(--color-ink);
+        font-weight: var(--font-weight-medium);
+    }
+}
+
+/* The active pill is its own element that slides 112px per item, not a background of the item. */
+@utility cd-nav-indicator {
+    position: absolute;
+    top: --spacing(1);
+    left: --spacing(1);
+    width: 112px;
+    height: 44px;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-sunken);
+    transition: transform 300ms var(--ease-entrance);
+    pointer-events: none;
+}
+
+@utility cd-nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-accent);
+    flex: none;
+}
+
+/* Typography: interface 12-40px, editorial display 80-190px; weight never exceeds 500. */
+
+@utility cd-display-xl {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-display-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-display-xl--line-height);
+    letter-spacing: var(--text-display-xl--letter-spacing);
+    color: var(--color-ink);
+}
+
+@utility cd-display-lg {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-display-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-display-lg--line-height);
+    letter-spacing: var(--text-display-lg--letter-spacing);
+    color: var(--color-ink);
+}
+
+@utility cd-display-md {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-display-md);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-display-md--line-height);
+    letter-spacing: var(--text-display-md--letter-spacing);
+    color: var(--color-ink);
+}
+
+@utility cd-display-sm {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-display-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-display-sm--line-height);
+    letter-spacing: var(--text-display-sm--letter-spacing);
+    color: var(--color-ink);
+}
+
+/* Huge text at 20% ink behind a mockup: the only texture in the system. */
+@utility cd-display-ghost {
+    color: var(--color-ink-whisper);
+}
+
+@utility cd-h1 {
+    margin: 0 0 --spacing(4);
+    font-family: var(--font-sans);
+    font-size: var(--text-h1);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-h1--line-height);
+    letter-spacing: var(--text-h1--letter-spacing);
+    color: var(--color-ink);
+}
+
+@utility cd-h2 {
+    margin: 0 0 --spacing(4);
+    font-family: var(--font-sans);
+    font-size: var(--text-h2);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-h2--line-height);
+    letter-spacing: var(--text-h2--letter-spacing);
+    color: var(--color-ink);
+}
+
+@utility cd-h3 {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-h3);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-h3--line-height);
+    letter-spacing: var(--text-h3--letter-spacing);
+    color: var(--color-ink);
+}
+
+@utility cd-h4 {
+    margin: 0 0 --spacing(6);
+    font-family: var(--font-sans);
+    font-size: var(--text-h4);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-h4--line-height);
+    color: var(--color-ink);
+}
+
+/* Two-tone headline: the subject in ink (`cd-em`), the rest dimmed. */
+@utility cd-h2--dim {
+    color: var(--color-ink-ghost);
+}
+
+@utility cd-h3--dim {
+    color: var(--color-ink-ghost);
+}
+
+@utility cd-em {
+    color: var(--color-ink);
+}
+
+@utility cd-em-quiet {
+    color: var(--color-ink-whisper);
+}
+
+@utility cd-subhead {
+    margin: 0 0 --spacing(4);
+    font-size: var(--text-subhead);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--text-subhead--line-height);
+    color: var(--color-ink-muted);
+}
+
+@utility cd-lede {
+    margin: 0 0 26px;
+    font-size: var(--text-lede);
+    line-height: var(--text-lede--line-height);
+    color: var(--color-ink-muted);
+}
+
+@utility cd-body-lg {
+    margin: 0;
+    font-size: var(--text-body-lg);
+    line-height: var(--text-body-lg--line-height);
+    color: var(--color-ink-muted);
+}
+
+@utility cd-text {
+    margin: 0 0 --spacing(6);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    color: var(--color-ink);
+}
+
+@utility cd-strong {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-ink);
+}
+
+/* Uppercase eyebrow, 16px above its block; uppercase by style, never typed. */
+@utility cd-label {
+    margin: 0 0 --spacing(4);
+    font-size: var(--text-label);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-label--line-height);
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+}
+
+/* Decorative only: essential 14px text uses text-ui in ink-muted. */
+@utility cd-caption {
+    display: inline-flex;
+    align-items: center;
+    gap: --spacing(2);
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
+    letter-spacing: var(--text-caption--letter-spacing);
+    color: var(--color-ink-ghost);
+}
+
+/* Text link: thin underline, no color change. */
+@utility cd-link {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-line-strong);
+    transition: border-color 200ms var(--ease-standard);
+
+    &:hover {
+        border-color: var(--color-ink);
+    }
+}
+
+@utility cd-link-arrow {
+    &::after {
+        content: "↗";
+        margin-left: 2px;
+        font-size: 0.85em;
+        color: var(--color-ink-ghost);
+    }
+}
+
+/* Footnote with asterisk: the only legitimate use of the signal color. */
+@utility cd-footnote {
+    margin: 0;
+    font-size: var(--text-label);
+    line-height: 1.4;
+    color: var(--color-signal);
+}
+
+@utility cd-footnote-marker {
+    color: var(--color-signal);
+    font-size: 0.8em;
+    vertical-align: super;
+}
+
+/* 1px rule, almost invisible: marks rhythm, not separation. */
+@utility cd-rule {
+    height: 1px;
+    border: 0;
+    background-color: var(--color-line-hairline);
+    margin: --spacing(6) 0;
+}
+
+@utility cd-rule--section {
+    background-color: var(--color-line-subtle);
+    margin: 0 0 --spacing(8);
+}
+
+/* Buttons: only the pill exists. Hover darkens the border and adds a shadow; press has no transform. */
+
+@utility cd-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: --spacing(2);
+    min-height: 46px;
+    padding: 10px --spacing(6);
+    border: 2px solid var(--color-line-strong);
+    border-radius: var(--radius-nav);
+    background-color: transparent;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-action);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-action--line-height);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        border-color 200ms var(--ease-standard),
+        background-color 200ms var(--ease-standard),
+        box-shadow 200ms var(--ease-standard);
+
+    &:hover {
+        border-color: var(--color-ink);
+        box-shadow: var(--shadow-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+}
+
+@utility cd-btn--block {
+    width: 100%;
+}
+
+@utility cd-btn--solid {
+    background-color: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-ink-inverse);
+
+    &:hover {
+        background-color: var(--color-ink-secondary);
+        border-color: var(--color-ink-secondary);
+    }
+}
+
+@utility cd-btn--accent {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-on-accent);
+}
+
+@utility cd-btn--sm {
+    min-height: 36px;
+    padding: 6px --spacing(4);
+    font-size: var(--text-ui);
+}
+
+/* Case study: header, metadata sidebar, 800px prose column and full bleed media. */
+
+@utility cd-case {
+    margin: --spacing(38) 0 --spacing(30);
+
+    @variant max-lg {
+        margin: --spacing(16) 0 --spacing(12);
+    }
+}
+
+@utility cd-case-head {
+    max-width: var(--container-prose);
+    margin-inline: auto;
+}
+
+@utility cd-case-meta {
+    display: grid;
+    grid-template-columns: var(--spacing-meta) minmax(0, 1fr);
+    gap: --spacing(10);
+    max-width: calc(var(--container-prose) + var(--spacing-meta) + --spacing(10));
+    margin-inline: auto;
+
+    @variant max-lg {
+        grid-template-columns: minmax(0, 1fr);
+        gap: --spacing(6);
+    }
+}
+
+@utility cd-meta-group {
+    margin-bottom: --spacing(8);
+}
+
+@utility cd-meta-value {
+    margin: 0;
+    font-size: var(--text-body);
+    line-height: 1.5;
+    color: var(--color-ink);
+}
+
+@utility cd-prose {
+    max-width: var(--container-prose);
+    margin-inline: auto;
+
+    & > * + * {
+        margin-top: --spacing(6);
+    }
+}
+
+@utility cd-bleed {
+    max-width: calc(var(--container-page) - --spacing(16));
+    margin: --spacing(16) auto;
+}
+
+/* Interaction hint: right-aligned caption above the grid, with a play triangle. */
+@utility cd-hint {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 --spacing(8) --spacing(2);
+
+    &::before {
+        content: "▶";
+        margin-right: --spacing(2);
+        font-size: 10px;
+        color: var(--color-ink-ghost);
+    }
+}
+
+/* Helpers. */
+
+@utility cd-stack-2 {
+    & > * + * {
+        margin-top: --spacing(2);
+    }
+}
+
+@utility cd-stack-4 {
+    & > * + * {
+        margin-top: --spacing(4);
+    }
+}
+
+@utility cd-stack-6 {
+    & > * + * {
+        margin-top: --spacing(6);
+    }
+}
+
+@utility cd-row {
+    display: flex;
+    align-items: center;
+    gap: --spacing(4);
+    flex-wrap: wrap;
+}
+
+@utility cd-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/*
+ * Additions without a counterpart in the source kit, needed by a bilingual developer portfolio with a theme
+ * switch. Built from existing tokens: pill geometry, tonal separation, no borders inside tiles.
+ */
+
+/* Segmented pill (theme and language switches): same geometry family as the nav. */
+@utility cd-seg {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    padding: --spacing(1);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-glass);
+    -webkit-backdrop-filter: blur(var(--blur-glass));
+    backdrop-filter: blur(var(--blur-glass));
+}
+
+@utility cd-seg-option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: --spacing(2);
+    min-width: 44px;
+    height: 36px;
+    padding: 0 --spacing(3);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background-color: transparent;
+    color: var(--color-ink-ghost);
+    font-family: var(--font-sans);
+    font-size: var(--text-ui);
+    line-height: var(--text-ui--line-height);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        color 200ms var(--ease-standard),
+        background-color 200ms var(--ease-standard);
+
+    &:hover {
+        color: var(--color-ink-secondary);
+    }
+
+    &[aria-pressed="true"],
+    &[aria-checked="true"],
+    &[aria-current="page"] {
+        background-color: var(--color-surface-sunken);
+        color: var(--color-ink);
+        font-weight: var(--font-weight-medium);
+    }
+}
+
+/* Chip: a skill or stack token. Reads as data, never as a button. */
+@utility cd-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 --spacing(3);
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface);
+    color: var(--color-ink-secondary);
+    font-size: var(--text-ui);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+@utility cd-chip--quiet {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px var(--color-line-subtle);
+}
+
+@utility cd-chip-set {
+    display: flex;
+    flex-wrap: wrap;
+    gap: --spacing(2);
+}
+
+/* Timeline row (experience, education): hairlines mark rhythm, not separation. */
+@utility cd-entry {
+    display: grid;
+    grid-template-columns: var(--spacing-meta) minmax(0, 1fr);
+    gap: --spacing(10);
+    padding: --spacing(6) 0;
+    border-top: 1px solid var(--color-line-hairline);
+
+    &:first-child {
+        border-top: 0;
+    }
+
+    @variant max-md {
+        grid-template-columns: minmax(0, 1fr);
+        gap: --spacing(2);
+    }
+}
+
+/* Availability line with the status dot: the accent's second and last appearance. */
+@utility cd-status {
+    display: inline-flex;
+    align-items: center;
+    gap: --spacing(2);
+    font-size: var(--text-caption);
+    color: var(--color-ink-muted);
+}

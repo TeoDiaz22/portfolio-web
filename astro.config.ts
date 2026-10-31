@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { parseEnv } from "node:util";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig, envField } from "astro/config";
+import { defineConfig, envField, fontProviders } from "astro/config";
 import { DEFAULT_LOCALE, LOCALES } from "./src/constants/site.constants.ts";
 
 /**
@@ -50,6 +50,27 @@ export default defineConfig({
             prefixDefaultLocale: false,
         },
     },
+
+    // Design system fonts, downloaded at build time and self-hosted; Tailwind's font-sans/display/mono read these
+    // variables (src/styles/theme.css). Weight never exceeds 500 in the design system
+    fonts: [
+        {
+            provider: fontProviders.fontsource(),
+            name: "Archivo",
+            cssVariable: "--font-archivo",
+            weights: [400, 500],
+            styles: ["normal", "italic"],
+            fallbacks: ["sans-serif"],
+        },
+        {
+            provider: fontProviders.fontsource(),
+            name: "JetBrains Mono",
+            cssVariable: "--font-jetbrains-mono",
+            weights: [400, 500],
+            styles: ["normal"],
+            fallbacks: ["monospace"],
+        },
+    ],
 
     // Typed and validated environment variables, imported from "astro:env/client" or "astro:env/server".
     // Astro loads .env.[mode] files natively, e.g. `astro build --mode pre` reads .env.pre
