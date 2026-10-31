@@ -23,10 +23,11 @@ const links = LOCALES.flatMap((target) => {
 {
     links.length > 1 && (
         <nav aria-label={t("language.label")}>
-            <ul>
+            <ul class="cd-seg">
                 {links.map((link) => (
                     <li>
                         <a
+                            class="cd-seg-option"
                             href={link.href}
                             hreflang={link.lang}
                             lang={link.lang}

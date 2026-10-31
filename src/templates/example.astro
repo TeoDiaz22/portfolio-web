@@ -1,0 +1,215 @@
+---
+/**
+ * Test page of the design system: floating nav, bento grid with every tile span, typography, buttons, chips,
+ * timeline, footnote and a case study whose prose is the page's Markdown body. Mixes the `.cd-*` component classes
+ * with the theme utilities (`bg-ink`, `text-h2`, `text-muted`…) so both can be checked in light and dark mode.
+ */
+import { render } from "astro:content";
+import { AUTHOR } from "@constants/site.constants.ts";
+import type { Props } from "@templates/default.astro";
+import { getPage } from "@utils/content.utils.ts";
+import { useTranslations } from "@utils/i18n.utils.ts";
+
+const { page } = Astro.props;
+const { Content } = await render(page.entry);
+const t = useTranslations(page.locale);
+const home = await getPage("home", page.locale);
+
+const navItems = [
+    { href: home.path, label: t("example.nav.home"), current: false },
+    { href: page.path, label: t("example.nav.example"), current: true },
+];
+// The indicator is its own element sliding 112px (one nav item) per position
+const indicatorOffset = navItems.findIndex((item) => item.current) * 112;
+
+const stack = ["Java", "TypeScript", "Spring Boot", "React", "Docker", "PostgreSQL"];
+const swatches = [
+    { token: "canvas", className: "bg-canvas" },
+    { token: "surface", className: "bg-surface" },
+    { token: "surface-sunken", className: "bg-surface-sunken" },
+    { token: "ink", className: "bg-ink" },
+    { token: "ink-muted", className: "bg-ink-muted" },
+    { token: "ink-ghost", className: "bg-ink-ghost" },
+    { token: "accent", className: "bg-accent" },
+    { token: "signal", className: "bg-signal" },
+];
+const github = AUTHOR.sameAs.find((profile) => profile.includes("github.com"));
+---
+
+<div class="cd-nav-dock mt-4">
+    <nav class="cd-nav" aria-label={t("example.nav.label")}>
+        <span class="cd-nav-indicator" style={`transform: translateX(${indicatorOffset}px)`}></span>
+        {
+            navItems.map((item) => (
+                <a class="relative cd-nav-item" href={item.href} aria-current={item.current ? "page" : undefined}>
+                    {item.current && <span class="cd-nav-dot" />}
+                    {item.label}
+                </a>
+            ))
+        }
+    </nav>
+</div>
+
+<main class="cd-container pb-24">
+    <header class="mx-auto max-w-pair pt-16 pb-12 text-center">
+        <p class="cd-label">{t("example.eyebrow")}</p>
+        <h1 class="cd-h1">{t("example.title")}</h1>
+    </header>
+
+    <p class="cd-hint"><span class="cd-caption">{t("example.hint")}</span></p>
+
+    <div class="cd-grid grid-flow-row-dense">
+        <!-- Hero span: label, title, ghost display texture, inner card and the circular action -->
+        <article class="cd-tile cd-span-hero flex cd-tile--interactive flex-col">
+            <p class="cd-label">{t("example.project.label")}</p>
+            <h2 class="cd-h2">GestPlay</h2>
+            <p class="cd-caption">{t("example.project.caption")}</p>
+            <p
+                class="absolute top-1/2 left-8 cd-display-md -translate-y-1/2 cd-display-ghost select-none"
+                aria-hidden="true"
+            >
+                GestPlay
+            </p>
+            <div class="relative mt-auto mb-24 ml-auto w-3/4 cd-card md:w-1/2">
+                <p class="font-mono text-mono text-copy">GET /api/stats</p>
+                <hr class="cd-rule my-3" />
+                <p class="font-mono text-mono text-muted">200 OK · application/json</p>
+            </div>
+            <a class="cd-tile-action" href="#caso" aria-label={t("example.project.action")}>↗</a>
+        </article>
+
+        <!-- Wide span: heading, subhead and chips -->
+        <section class="cd-tile cd-span-wide cd-tile--interactive">
+            <p class="cd-label">{t("example.about.label")}</p>
+            <h2 class="cd-h2">{t("example.about.title")}</h2>
+            <p class="cd-subhead">{t("example.about.subhead")}</p>
+            <ul class="cd-chip-set">
+                {stack.map((name) => <li class="cd-chip">{name}</li>)}
+                <li class="cd-chip cd-chip--quiet">{t("example.about.learning")}</li>
+            </ul>
+        </section>
+
+        <!-- Square span: theme color utilities -->
+        <section class="cd-tile cd-span-sq cd-tile--snug">
+            <p class="cd-label">{t("example.palette.label")}</p>
+            <ul class="grid grid-cols-2 gap-x-3 gap-y-4">
+                {
+                    swatches.map((swatch) => (
+                        <li class="flex items-center gap-2">
+                            <span
+                                class:list={["size-8 shrink-0 rounded-pill ring-1 ring-line-strong", swatch.className]}
+                            />
+                            <span class="text-label text-muted">{swatch.token}</span>
+                        </li>
+                    ))
+                }
+            </ul>
+        </section>
+
+        <!-- Square span: every button variant -->
+        <section class="cd-tile cd-span-sq cd-tile--snug">
+            <p class="cd-label">{t("example.buttons.label")}</p>
+            <div class="flex flex-col items-start gap-3">
+                <a class="cd-btn cd-btn--solid" href="#caso">{t("example.buttons.projects")}</a>
+                <a class="cd-btn cd-btn--accent" href="#caso">{t("example.buttons.contact")}</a>
+                <a class="cd-btn" href={github}>GitHub <span aria-hidden="true">↗</span></a>
+                <button type="button" class="cd-btn cd-btn--sm">ES · EN</button>
+            </div>
+        </section>
+
+        <!-- Tall span: the type scale as theme utilities -->
+        <section class="cd-tile cd-span-tall flex flex-col gap-5 cd-tile--snug">
+            <p class="cd-label mb-0">{t("example.type.label")}</p>
+            <p class="font-display text-display-sm text-heading">Aa</p>
+            <p class="text-h2 text-heading">Uqai</p>
+            <p class="text-h4 text-heading">h4 · 28px</p>
+            <p class="text-lede text-muted">{t("example.type.lede")}</p>
+            <p class="text-body text-copy">{t("example.type.body")}</p>
+            <p class="text-ui text-copy">ui · 14px</p>
+            <p class="text-label text-muted uppercase">label · 12px</p>
+            <p class="font-mono text-mono text-copy">mono · 14px</p>
+        </section>
+
+        <!-- Wide span: timeline entries -->
+        <section class="cd-tile cd-span-wide">
+            <p class="cd-label">{t("example.timeline.label")}</p>
+            <div>
+                <div class="cd-entry">
+                    <p class="text-ui text-muted">{t("example.timeline.uqaiDate")}</p>
+                    <div>
+                        <p class="text-body-tight cd-strong">{t("example.timeline.uqaiRole")}</p>
+                        <p class="text-ui text-muted">{t("example.timeline.uqaiPlace")}</p>
+                    </div>
+                </div>
+                <div class="cd-entry">
+                    <p class="text-ui text-muted">{t("example.timeline.epnDate")}</p>
+                    <div>
+                        <p class="text-body-tight cd-strong">{t("example.timeline.epnRole")}</p>
+                        <p class="text-ui text-muted">{t("example.timeline.epnPlace")}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Square span: text link and footnote -->
+        <section class="cd-tile cd-span-sq flex flex-col cd-tile--snug">
+            <p class="cd-label">{t("example.note.label")}</p>
+            <p class="text-body text-copy">
+                {t("example.note.text")}{" "}
+                <a class="cd-link-arrow cd-link" href={github}>{t("example.note.link")}</a>.
+            </p>
+            <p class="cd-footnote mt-auto">
+                <span class="cd-footnote-marker">*</span>
+                {t("example.note.footnote")}
+            </p>
+        </section>
+
+        <!-- Wide span: two-tone headline, lede and status line -->
+        <section class="cd-tile cd-span-wide cd-tile--center">
+            <p class="cd-h3 cd-h3--dim">
+                <span class="cd-em">{t("example.headline.subject")}</span>{" "}
+                {t("example.headline.rest")}
+            </p>
+            <hr class="cd-rule w-full" />
+            <p class="cd-body-lg">{t("example.headline.lede")}</p>
+            <p class="mt-6 cd-status">
+                <span class="cd-nav-dot"></span>
+                {t("example.headline.location")}
+            </p>
+        </section>
+
+        <!-- Square span: media tile with the MD lockup -->
+        <div class="cd-tile cd-span-sq cd-tile--center items-center cd-tile--media" aria-hidden="true">
+            <p class="font-display text-display-md text-ink-inverse">MD</p>
+        </div>
+    </div>
+
+    <!-- Case study: header, metadata sidebar and the Markdown body as prose -->
+    <article id="caso" class="cd-case scroll-mt-28">
+        <header class="cd-case-head">
+            <p class="cd-label">{t("example.case.label")}</p>
+            <h2 class="cd-display-lg mb-6">GestPlay</h2>
+            <p class="cd-subhead">{t("example.case.subhead")}</p>
+            <hr class="cd-rule cd-rule--section mt-8" />
+        </header>
+        <div class="cd-case-meta">
+            <dl>
+                <div class="cd-meta-group">
+                    <dt class="cd-label">{t("example.case.period")}</dt>
+                    <dd class="cd-meta-value">{t("example.case.periodValue")}</dd>
+                </div>
+                <div class="cd-meta-group">
+                    <dt class="cd-label">{t("example.case.stack")}</dt>
+                    <dd class="cd-meta-value">{t("example.case.stackValue")}</dd>
+                </div>
+                <div class="cd-meta-group">
+                    <dt class="cd-label">{t("example.case.audience")}</dt>
+                    <dd class="cd-meta-value">{t("example.case.audienceValue")}</dd>
+                </div>
+            </dl>
+            <div class="cd-prose w-full [&_h2]:cd-h4 [&_h2]:mb-0 [&_p]:cd-text">
+                <Content />
+            </div>
+        </div>
+    </article>
+</main>
