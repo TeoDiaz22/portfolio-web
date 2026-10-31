@@ -8,7 +8,7 @@ export const DEFAULT_LOCALE: Locale = "es";
 
 /** Locale data that differs per language. `ogLocale` uses the `language_TERRITORY` format required by Open Graph. */
 export const LOCALE_META: Record<Locale, { lang: string; ogLocale: string; name: string; homeLabel: string }> = {
-    es: { lang: "es", ogLocale: "es_ES", name: "Español", homeLabel: "Inicio" },
+    es: { lang: "es", ogLocale: "es_EC", name: "Español", homeLabel: "Inicio" },
     en: { lang: "en", ogLocale: "en_US", name: "English", homeLabel: "Home" },
 };
 
@@ -24,8 +24,7 @@ export const SITE = {
 /** Data for the site-wide `Person` node in JSON-LD. */
 export const AUTHOR = {
     name: "Mateo Díaz",
-    // TODO: replace with the real job title
-    jobTitle: { es: "Desarrollador de software", en: "Software developer" } satisfies Record<Locale, string>,
+    jobTitle: { es: "Desarrollador Fullstack", en: "Fullstack developer" } satisfies Record<Locale, string>,
     /** Profiles that identify the same person (GitHub, LinkedIn…); used for `sameAs` and `rel="me"`. */
     sameAs: ["https://github.com/TeoDiaz22"],
 } as const;
