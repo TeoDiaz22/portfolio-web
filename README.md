@@ -15,19 +15,20 @@ pnpm install
 
 ## Commands
 
-| Command             | Action                                                   |
-| :------------------ | :------------------------------------------------------- |
-| `pnpm dev`          | Start the dev server at `localhost:4321`                 |
-| `pnpm build`        | Build the production site to `./dist/`                   |
-| `pnpm build:pre`    | Build the staging site to `./dist/` (`--mode pre`)       |
-| `pnpm indexnow`     | Submit the built sitemap URLs to IndexNow (production)   |
-| `pnpm preview`      | Preview the build locally                                |
-| `pnpm format`       | Format the whole project with Prettier                   |
-| `pnpm format:check` | Check formatting without writing changes                 |
-| `pnpm lint`         | Lint with ESLint                                         |
-| `pnpm lint:fix`     | Lint and apply automatic fixes                           |
-| `pnpm typecheck`    | Type check `.astro` and `.ts` files (`astro check`)      |
-| `pnpm check`        | Run `format:check`, `lint` and `typecheck` in that order |
+| Command             | Action                                                           |
+| :------------------ | :--------------------------------------------------------------- |
+| `pnpm dev`          | Start the dev server at `localhost:4321`                         |
+| `pnpm build`        | Build the production site to `./dist/`                           |
+| `pnpm build:pre`    | Build the staging site to `./dist/` (`--mode pre`)               |
+| `pnpm indexnow`     | Submit the built sitemap URLs to IndexNow (production)           |
+| `pnpm preview`      | Preview the build locally                                        |
+| `pnpm format`       | Format the whole project with Prettier                           |
+| `pnpm format:check` | Check formatting without writing changes                         |
+| `pnpm lint`         | Lint with ESLint                                                 |
+| `pnpm lint:fix`     | Lint and apply automatic fixes                                   |
+| `pnpm typecheck`    | Type check `.astro` and `.ts` files (`astro check`)              |
+| `pnpm i18n:check`   | Check that every page is translated and links match their locale |
+| `pnpm check`        | Run `format:check`, `lint`, `typecheck` and `i18n:check`         |
 
 ## Code quality
 
@@ -66,10 +67,14 @@ Site-wide values (name, author, social profiles, theme color, blocked AI crawler
 
 ### Adding a page
 
-1. Create `src/content/pages/es/<name>.md` and `src/content/pages/en/<name>.md` with a `seo` block (validated by
-   `seoSchema` in `src/content.config.ts`; the build fails if a title or description is too long):
+1. Create a folder `src/content/pages/<name>/` with one Markdown file per locale, `es.md` and `en.md`. The folder name
+   identifies the page across locales; `slug` sets its URL in each one (defaults to the folder name; `home` is always
+   `/`). The `seo` block is validated by `seoSchema` in `src/content.config.ts`, so a title or description that is too
+   long fails the build:
 
     ```yaml
+    # src/content/pages/about/es.md → /sobre-mi   (en.md with `slug: about` → /en/about)
+    slug: sobre-mi
     seo:
         title: Sobre mí # ≤ 60 chars, rendered as "Sobre mí · Mateo Díaz"
         description: … # 50–160 chars
@@ -78,12 +83,13 @@ Site-wide values (name, author, social profiles, theme color, blocked AI crawler
         # image, imageAlt, noindex, canonical, ogType, fullTitle, publishedAt are optional
     ```
 
-2. Create `src/pages/[...lang]/<name>.astro` (copy `index.astro` and change the page name). It builds `/<name>` and
-   `/en/<name>`.
+2. Optionally, create `src/templates/<name>.astro` for a page with its own design; otherwise
+   `src/templates/default.astro` renders the Markdown body. Templates receive the `page` (locale, path and entry).
 
-The file name is the route (`home` is `/`). With that, the page is automatically included in the sitemap,
-`llms.txt`, `llms-full.txt`, gets its Markdown version (`/<name>.md`) and its Open Graph image (`/og/<name>.png`).
-`noindex: true` removes it from all of them.
+`src/pages/[...slug].astro` builds every page in every locale. The page is automatically included in the sitemap,
+`llms.txt`, `llms-full.txt`, gets its Markdown version (`/<path>.md`), its Open Graph image (`/og/<path>.png`), and
+`hreflang` and the language switcher link its translations. `noindex: true` removes it from the sitemap and the LLM
+files.
 
 ### Generated files
 
@@ -103,6 +109,31 @@ The file name is the route (`home` is `/`). With that, the page is automatically
   and, ideally, protect staging with basic auth.
 - Run `pnpm indexnow` after each production deploy.
 - Lighthouse CI (`.github/workflows/lighthouse.yml`) already runs on pull requests against a production build.
+
+## Internationalization
+
+Spanish (`es`) is the default locale and has no URL prefix; English (`en`) lives under `/en`. Locales are defined once
+in `LOCALES` (`src/constants/site.constants.ts`), which also feeds Astro's `i18n` config.
+
+| What                         | Where                                  | Completeness enforced by                         |
+| :--------------------------- | :------------------------------------- | :----------------------------------------------- |
+| Page content and SEO         | `src/content/pages/<page>/<locale>.md` | `pnpm i18n:check`                                |
+| Interface strings            | `src/i18n/<locale>.i18n.ts`            | Type check (dictionaries are typed against `es`) |
+| Locale metadata (name, `og`) | `LOCALE_META` in `site.constants.ts`   | Type check                                       |
+
+Interface strings are read with `useTranslations(locale)` from `@utils/i18n.utils.ts`; keys are typed and support
+`{placeholder}` values:
+
+```ts
+const t = useTranslations(locale);
+t("breadcrumb.home");
+```
+
+Internal links in Markdown must use the URL of the same locale (`/sobre-mi` in `es.md`, `/en/about` in `en.md`);
+`pnpm i18n:check` reports links that point to another locale or to no page, missing translations and duplicated URLs.
+
+To add a locale, add it to `LOCALES` and `LOCALE_META`, create `src/i18n/<locale>.i18n.ts` and register it in
+`src/i18n/index.i18n.ts`; then the type check and `pnpm i18n:check` list every missing file.
 
 ## Pinned versions
 

@@ -42,6 +42,18 @@ There is no test runner configured.
   `.env.pre`); all `.env*` files are git-ignored except `.env.template`.
 - `docs/` is excluded from Prettier.
 
+## Pages and i18n
+
+- Pages are content, not route files: `src/content/pages/<page>/<locale>.md` (one file per locale in `LOCALES`), rendered
+  by the catch-all `src/pages/[...slug].astro` with `src/templates/<page>.astro` or `default.astro`. Do not add page
+  routes under `src/pages/`; that folder only holds the catch-all and generated endpoints (`robots.txt`, `sitemap.xml`,
+  `llms.txt`, OG images…).
+- `slug` in the frontmatter sets the URL per locale (translated slugs). Build internal URLs from `Page.path` or
+  `localizePath`, never by swapping the locale prefix.
+- No hardcoded interface text: add it to `src/i18n/es.i18n.ts` and every other dictionary, and read it with
+  `useTranslations(locale)`.
+- `pnpm check` includes `pnpm i18n:check` (missing translations, duplicated URLs, links to another locale).
+
 ## Pinned versions
 
 Do not upgrade these independently; the reasons are documented in the README "Pinned versions" table:
