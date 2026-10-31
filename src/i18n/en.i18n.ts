@@ -4,6 +4,9 @@ const en: Dictionary = {
     breadcrumb: {
         home: "Home",
     },
+    language: {
+        label: "Language",
+    },
     llms: {
         pages: "Pages (English)",
         intro:

@@ -1,11 +1,12 @@
 ---
 import "@styles/global.css";
+import LanguageSwitcher from "@components/LanguageSwitcher.astro";
 import Seo, { type Props as SeoProps } from "@components/seo/Seo.astro";
 import { AUTHOR, LOCALE_META, SITE } from "@constants/site.constants.ts";
 
 type Props = SeoProps;
 
-const { locale } = Astro.props;
+const { locale, alternates } = Astro.props;
 ---
 
 <!doctype html>
@@ -23,6 +24,9 @@ const { locale } = Astro.props;
         <meta name="generator" content={Astro.generator} />
     </head>
     <body>
+        <header>
+            <LanguageSwitcher locale={locale} alternates={alternates} />
+        </header>
         <slot />
     </body>
 </html>

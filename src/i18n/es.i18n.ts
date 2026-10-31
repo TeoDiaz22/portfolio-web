@@ -6,6 +6,9 @@ const es = {
     breadcrumb: {
         home: "Inicio",
     },
+    language: {
+        label: "Idioma",
+    },
     llms: {
         pages: "Páginas",
         intro:
