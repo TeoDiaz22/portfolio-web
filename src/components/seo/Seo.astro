@@ -10,7 +10,7 @@ import { DEFAULT_LOCALE, LOCALE_META, LOCALES, SITE, type Locale } from "@consta
 import { isIndexable } from "@utils/env.ts";
 import { getAlternatePaths } from "@utils/i18n.ts";
 import { pageGraph, serializeJsonLd } from "@utils/schema.ts";
-import { absoluteUrl, toPublicPath } from "@utils/url.ts";
+import { absoluteUrl, markdownPath, toPublicPath } from "@utils/url.ts";
 import type { SeoData } from "../../content.config.ts";
 
 export interface Props {
@@ -78,6 +78,10 @@ const graph = pageGraph(
 
 {LOCALES.map((alternate) => <link rel="alternate" hreflang={alternate} href={alternates[alternate]} />)}
 <link rel="alternate" hreflang="x-default" href={alternates[DEFAULT_LOCALE]} />
+{
+    // Only indexable pages get a Markdown version (see src/pages/[...path].md.ts)
+    !seo.noindex && <link rel="alternate" type="text/markdown" href={markdownPath(path)} />
+}
 
 <meta property="og:type" content={seo.ogType} />
 <meta property="og:site_name" content={SITE.name} />

@@ -14,3 +14,11 @@ export function absoluteUrl(path: string, site: URL | undefined): string {
     if (!site) throw new Error("`site` must be set in astro.config.ts to build absolute URLs");
     return new URL(path, site).href;
 }
+
+/**
+ * URL of the Markdown version of a page, as llmstxt.org proposes: `.md` appended to the page URL, or `index.html.md`
+ * for URLs without a file name (only `/` with `trailingSlash: "never"`).
+ */
+export function markdownPath(path: string): string {
+    return path === "/" ? "/index.html.md" : `${path}.md`;
+}
