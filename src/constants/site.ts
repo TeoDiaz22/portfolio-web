@@ -29,3 +29,11 @@ export const AUTHOR = {
     /** Profiles that identify the same person (GitHub, LinkedIn…); used for `sameAs` and `rel="me"`. */
     sameAs: ["https://github.com/TeoDiaz22"],
 } as const;
+
+/**
+ * AI crawlers blocked in robots.txt (production). Empty on purpose: search/answer bots (OAI-SearchBot, ChatGPT-User,
+ * Claude-SearchBot, Claude-User, PerplexityBot…) cite the site with links, and training bots (GPTBot, ClaudeBot,
+ * Google-Extended, CCBot, Applebot-Extended, Meta-ExternalAgent, Bytespider…) only add public portfolio content to
+ * models. Add a user agent here to block it; blocking Google-Extended does not affect Google Search.
+ */
+export const BLOCKED_CRAWLERS: string[] = [];
