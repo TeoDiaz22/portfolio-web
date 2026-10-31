@@ -29,7 +29,7 @@ pnpm install
 
 ## Code quality
 
-- **Prettier** (`prettier.config.ts`) formats the code, including `.astro` files, and sorts imports.
+- **Prettier** (`prettier.config.ts`) formats the code, including `.astro` files, sorts imports and sorts Tailwind classes.
 - **ESLint** (`eslint.config.ts`) checks code quality, including accessibility rules for `.astro` files. Formatting
   rules are disabled through `eslint-config-prettier`.
 - **Git hooks** (Husky):
@@ -49,8 +49,9 @@ Git except `.env.template`.
 
 Update these only after checking the reason they are pinned:
 
-| Package                             | Version                | Reason                                                                                                                                                                                   |
-| :---------------------------------- | :--------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `typescript`                        | `6.0.3` (+ `override`) | `@astrojs/check` supports `^5 \|\| ^6` and `typescript-eslint` requires `<6.1.0`. Without the override, TypeScript 7 gets installed transitively. Review when both support TypeScript 7. |
-| `prettier`, `prettier-plugin-astro` | exact                  | A minor release can reformat the whole repository. Update them on purpose and commit the reformat separately.                                                                            |
-| `eslint-plugin-jsx-a11y-x`          | —                      | Used instead of `eslint-plugin-jsx-a11y`, which does not support ESLint 10 yet.                                                                                                          |
+| Package                                   | Version                | Reason                                                                                                                                                                                   |
+| :---------------------------------------- | :--------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `typescript`                              | `6.0.3` (+ `override`) | `@astrojs/check` supports `^5 \|\| ^6` and `typescript-eslint` requires `<6.1.0`. Without the override, TypeScript 7 gets installed transitively. Review when both support TypeScript 7. |
+| `prettier`, `prettier-plugin-tailwindcss` | exact                  | A minor release can reformat the whole repository. Update them on purpose and commit the reformat separately.                                                                            |
+| `prettier-plugin-astro`                   | `0.14.1` (exact)       | 1.x changed its AST and `prettier-plugin-tailwindcss` 0.8.x no longer sorts classes in `.astro` files with it. Review when the Tailwind plugin supports `prettier-plugin-astro` 1.x.     |
+| `eslint-plugin-jsx-a11y-x`                | —                      | Used instead of `eslint-plugin-jsx-a11y`, which does not support ESLint 10 yet.                                                                                                          |

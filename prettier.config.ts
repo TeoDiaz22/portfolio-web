@@ -1,14 +1,15 @@
 import type { PrettierConfig } from "@ianvs/prettier-plugin-sort-imports";
+import type { PluginOptions as TailwindPluginOptions } from "prettier-plugin-tailwindcss";
 
-const config: PrettierConfig = {
+const config: PrettierConfig & TailwindPluginOptions = {
     tabWidth: 4,
     useTabs: false,
     printWidth: 120,
     endOfLine: "lf",
-    trailingComma: "es5",
-    arrowParens: "avoid",
-    // The import sorting plugin must come before prettier-plugin-astro
-    plugins: ["@ianvs/prettier-plugin-sort-imports", "prettier-plugin-astro"],
+    trailingComma: "all",
+    arrowParens: "always",
+    // The import sorting plugin must come before prettier-plugin-astro, and the Tailwind plugin must be last
+    plugins: ["@ianvs/prettier-plugin-sort-imports", "prettier-plugin-astro", "prettier-plugin-tailwindcss"],
     overrides: [
         {
             files: "*.astro",
@@ -35,6 +36,8 @@ const config: PrettierConfig = {
     ],
     importOrderTypeScriptVersion: "6.0.0",
     importOrderParserPlugins: ["typescript"],
+    // Tailwind 4 entry point, used to know the project classes and their order
+    tailwindStylesheet: "./src/styles/global.css",
 };
 
 export default config;
