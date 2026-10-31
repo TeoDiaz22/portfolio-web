@@ -37,6 +37,11 @@ export default defineConfig({
         format: "file",
     },
     prerenderConflictBehavior: "error",
+    // Internal links are fetched on hover/focus, so the next page is usually cached before the click
+    prefetch: {
+        prefetchAll: true,
+        defaultStrategy: "hover",
+    },
 
     i18n: {
         locales: [...LOCALES],
@@ -60,6 +65,8 @@ export default defineConfig({
             }),
             GOOGLE_SITE_VERIFICATION: envField.string({ context: "server", access: "public", optional: true }),
             BING_SITE_VERIFICATION: envField.string({ context: "server", access: "public", optional: true }),
+            // Public by design: IndexNow verifies ownership by fetching /<key>.txt from the site
+            INDEXNOW_KEY: envField.string({ context: "server", access: "public", optional: true, min: 8 }),
         },
         validateSecrets: true,
     },

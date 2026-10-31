@@ -1,0 +1,16 @@
+---
+import { render } from "astro:content";
+import { DEFAULT_LOCALE } from "@constants/site.ts";
+import Layout from "@layouts/Layout.astro";
+import { getPage } from "@utils/content.ts";
+
+// Hosts serve a single 404.html for every locale, so it is written in the default one
+const page = await getPage("404", DEFAULT_LOCALE);
+const { Content } = await render(page);
+---
+
+<Layout seo={page.data.seo} locale={DEFAULT_LOCALE}>
+    <main>
+        <Content />
+    </main>
+</Layout>

@@ -77,11 +77,17 @@ const graph = pageGraph(
 <link rel="canonical" href={canonical} />
 <meta name="robots" content={robots} />
 
-{LOCALES.map((alternate) => <link rel="alternate" hreflang={alternate} href={alternates[alternate]} />)}
-<link rel="alternate" hreflang="x-default" href={alternates[DEFAULT_LOCALE]} />
 {
-    // Only indexable pages get a Markdown version (see src/pages/[...path].md.ts)
-    !seo.noindex && <link rel="alternate" type="text/markdown" href={markdownPath(path)} />
+    // noindex pages (e.g. 404) may exist in a single locale and have no Markdown version (src/pages/[...path].md.ts)
+    !seo.noindex && (
+        <>
+            {LOCALES.map((alternate) => (
+                <link rel="alternate" hreflang={alternate} href={alternates[alternate]} />
+            ))}
+            <link rel="alternate" hreflang="x-default" href={alternates[DEFAULT_LOCALE]} />
+            <link rel="alternate" type="text/markdown" href={markdownPath(path)} />
+        </>
+    )
 }
 
 <meta property="og:type" content={seo.ogType} />

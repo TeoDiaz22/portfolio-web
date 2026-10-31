@@ -17,6 +17,8 @@ const { locale } = Astro.props;
         <meta name="theme-color" content={SITE.themeColor} />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.webmanifest" />
         {AUTHOR.sameAs.map((profile) => <link rel="me" href={profile} />)}
         <meta name="generator" content={Astro.generator} />
     </head>
